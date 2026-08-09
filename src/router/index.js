@@ -1,14 +1,15 @@
 import { createRouter, createWebHistory } from 'vue-router';
+import HomeView from '../views/HomeView.vue';
 import LoginView from '../views/LoginView.vue';
 import RegisterView from '../views/RegisterView.vue';
 import DashboardView from '../views/DashboardView.vue';
 
 const routes = [
-  { path: '/', redirect: '/dashboard' },
+  { path: '/', name: 'Home', component: HomeView, meta: { title: 'Home - Rozka Capitals Social Trading' } },
   { path: '/login', name: 'Login', component: LoginView, meta: { title: 'Login - Rozka Capitals Social Trading' } },
   { path: '/register', name: 'Register', component: RegisterView, meta: { title: 'Register - Rozka Capitals Social Trading' } },
   { path: '/dashboard', name: 'Dashboard', component: DashboardView, meta: { title: 'Dashboard - Rozka Capitals Social Trading' } },
-  { path: '/:pathMatch(.*)*', redirect: '/dashboard' }
+  { path: '/:pathMatch(.*)*', redirect: '/' }
 ];
 
 const router = createRouter({
