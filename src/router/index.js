@@ -4,6 +4,7 @@ import LoginView from '../views/LoginView.vue';
 import RegisterView from '../views/RegisterView.vue';
 import DashboardView from '../views/DashboardView.vue';
 import InvestorView from '../views/InvestorView.vue';
+import MasterTraderView from '../views/MasterTraderView.vue';
 
 const routes = [
   { path: '/', name: 'Home', component: HomeView, meta: { title: 'Home - Rozka Capitals Social Trading' } },
@@ -11,6 +12,7 @@ const routes = [
   { path: '/register', name: 'Register', component: RegisterView, meta: { title: 'Register - Rozka Capitals Social Trading' } },
   { path: '/dashboard', name: 'Dashboard', component: DashboardView, meta: { title: 'Dashboard - Rozka Capitals Social Trading' } },
   { path: '/investor', name: 'Investor', component: InvestorView, meta: { title: 'Investor Center - Rozka Capitals Social Trading' } },
+  { path: '/master-trader', name: 'MasterTrader', component: MasterTraderView, meta: { title: 'Master Trader Portal - Rozka Capitals' } },
   { path: '/:pathMatch(.*)*', redirect: '/' }
 ];
 

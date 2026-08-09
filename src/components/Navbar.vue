@@ -14,6 +14,7 @@
       <nav class="desktop-nav">
         <router-link to="/dashboard" class="nav-link">Social Dashboard</router-link>
         <router-link to="/investor" class="nav-link">Investor Center</router-link>
+        <router-link to="/master-trader" class="nav-link">Master Portal</router-link>
       </nav>
 
       <!-- User Auth Actions / Status -->
@@ -52,6 +53,7 @@
       <div v-if="isMobileMenuOpen" class="mobile-nav-drawer">
         <router-link to="/dashboard" class="mobile-nav-link" @click="isMobileMenuOpen = false">Social Dashboard</router-link>
         <router-link to="/investor" class="mobile-nav-link" @click="isMobileMenuOpen = false">Investor Center</router-link>
+        <router-link to="/master-trader" class="mobile-nav-link" @click="isMobileMenuOpen = false">Master Portal</router-link>
         
         <div class="mobile-auth-group">
           <template v-if="authStore.isLoggedIn">
