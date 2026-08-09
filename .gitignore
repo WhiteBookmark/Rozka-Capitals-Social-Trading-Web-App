@@ -1,0 +1,24 @@
+# Node & Dependencies
+node_modules/
+.pnpm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Production Build Output
+dist/
+dist-ssr/
+*.local
+
+# Environment files
+.env.local
+.env.*.local
+
+# Editor directories
+.vscode/*
+!.vscode/extensions.json
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?

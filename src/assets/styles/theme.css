@@ -1,0 +1,299 @@
+/* ==========================================================================
+   ROZKA CAPITALS SOCIAL TRADING - GLOBAL THEME & DESIGN SYSTEM
+   ========================================================================== */
+
+:root {
+  /* --- TYPOGRAPHY --- */
+  --font-family-heading: 'Merriweather', serif;
+  --font-family-body: 'Roboto', sans-serif;
+
+  /* --- HSL COLOR PALETTES (10 Shades per Color) --- */
+  
+  /* Primary & Accent: Gold */
+  --color-gold-50: hsl(37, 72%, 96%);
+  --color-gold-100: hsl(37, 72%, 90%);
+  --color-gold-200: hsl(37, 72%, 82%);
+  --color-gold-300: hsl(37, 72%, 75%);
+  --color-gold-400: hsl(37, 72%, 69%);
+  --color-gold-500: hsl(37, 72%, 65%); /* Base Brand Gold #E5B567 */
+  --color-gold-600: hsl(37, 72%, 55%);
+  --color-gold-700: hsl(37, 72%, 45%);
+  --color-gold-800: hsl(37, 72%, 32%);
+  --color-gold-900: hsl(37, 72%, 18%);
+
+  /* Surface & Card: Dark Grey */
+  --color-surface-50: hsl(0, 0%, 25%);
+  --color-surface-100: hsl(0, 0%, 22%);
+  --color-surface-200: hsl(0, 0%, 18%);
+  --color-surface-300: hsl(0, 0%, 15%);
+  --color-surface-400: hsl(0, 0%, 12%);
+  --color-surface-500: hsl(0, 0%, 10%); /* Base Surface #1A1A1A */
+  --color-surface-600: hsl(0, 0%, 8%);
+  --color-surface-700: hsl(0, 0%, 6%);
+  --color-surface-800: hsl(0, 0%, 4%);
+  --color-surface-900: hsl(0, 0%, 2%);
+
+  /* Background: Pure Black */
+  --color-background: hsl(0, 0%, 0%);
+
+  /* Semantic: Success Green */
+  --color-success-50: hsl(156, 87%, 95%);
+  --color-success-100: hsl(156, 87%, 85%);
+  --color-success-200: hsl(156, 87%, 75%);
+  --color-success-300: hsl(156, 87%, 65%);
+  --color-success-400: hsl(156, 87%, 53%);
+  --color-success-500: hsl(156, 87%, 43%); /* Base Green #0ECB81 */
+  --color-success-600: hsl(156, 87%, 35%);
+  --color-success-700: hsl(156, 87%, 27%);
+  --color-success-800: hsl(156, 87%, 18%);
+  --color-success-900: hsl(156, 87%, 10%);
+
+  /* Semantic: Error Red */
+  --color-error-50: hsl(352, 90%, 96%);
+  --color-error-100: hsl(352, 90%, 88%);
+  --color-error-200: hsl(352, 90%, 78%);
+  --color-error-300: hsl(352, 90%, 70%);
+  --color-error-400: hsl(352, 90%, 65%);
+  --color-error-500: hsl(352, 90%, 62%); /* Base Red #F6465D */
+  --color-error-600: hsl(352, 90%, 50%);
+  --color-error-700: hsl(352, 90%, 38%);
+  --color-error-800: hsl(352, 90%, 25%);
+  --color-error-900: hsl(352, 90%, 14%);
+
+  /* Semantic: Warning Yellow */
+  --color-warning-50: hsl(45, 91%, 95%);
+  --color-warning-100: hsl(45, 91%, 85%);
+  --color-warning-200: hsl(45, 91%, 75%);
+  --color-warning-300: hsl(45, 91%, 65%);
+  --color-warning-400: hsl(45, 91%, 56%);
+  --color-warning-500: hsl(45, 91%, 49%); /* Base Yellow #F0B90B */
+  --color-warning-600: hsl(45, 91%, 40%);
+  --color-warning-700: hsl(45, 91%, 30%);
+  --color-warning-800: hsl(45, 91%, 20%);
+  --color-warning-900: hsl(45, 91%, 10%);
+
+  /* Neutral Grey */
+  --color-grey-50: hsl(0, 0%, 95%);
+  --color-grey-100: hsl(0, 0%, 88%);
+  --color-grey-200: hsl(0, 0%, 78%);
+  --color-grey-300: hsl(0, 0%, 65%);
+  --color-grey-400: hsl(0, 0%, 50%);
+  --color-grey-500: hsl(0, 0%, 40%);
+  --color-grey-600: hsl(0, 0%, 30%);
+  --color-grey-700: hsl(0, 0%, 20%);
+  --color-grey-800: hsl(0, 0%, 14%);
+  --color-grey-900: hsl(0, 0%, 8%);
+
+  /* --- ELEVATION SYSTEM (5 Levels) --- */
+  --elevation-1: 0 2px 4px rgba(0, 0, 0, 0.4), 0 0 2px rgba(229, 181, 103, 0.05);
+  --elevation-2: 0 4px 8px rgba(0, 0, 0, 0.5), 0 0 4px rgba(229, 181, 103, 0.1);
+  --elevation-3: 0 8px 16px rgba(0, 0, 0, 0.6), 0 0 8px rgba(229, 181, 103, 0.15);
+  --elevation-4: 0 12px 24px rgba(0, 0, 0, 0.7), 0 0 12px rgba(229, 181, 103, 0.2);
+  --elevation-5: 0 20px 40px rgba(0, 0, 0, 0.85), 0 0 20px rgba(229, 181, 103, 0.3);
+
+  /* --- CUSTOM SVG CURSORS --- */
+  --cursor-default: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='%23E5B567' stroke='%231A1A1A' stroke-width='1.5'%3E%3Cpolygon points='3,3 21,11 12,13 8,21'/%3E%3C/svg%3E") 0 0, auto;
+  --cursor-pointer: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='%23E5B567' stroke='%23FFFFFF' stroke-width='1.5'%3E%3Cpath d='M9 11l3-8 3 8 7 3-7 3-3 8-3-8-7-3 7-3z'/%3E%3C/svg%3E") 12 12, pointer;
+  --cursor-loading: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%23E5B567' stroke-width='3'%3E%3Ccircle cx='12' cy='12' r='8' stroke-dasharray='35' stroke-dashoffset='10'/%3E%3C/svg%3E") 12 12, wait;
+}
+
+/* --- GLOBAL RESET & BASE STYLES --- */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body {
+  width: 100%;
+  min-height: 100vh;
+  background-color: var(--color-background);
+  color: var(--color-grey-100);
+  font-family: var(--font-family-body);
+  font-size: 16px;
+  line-height: 1.6;
+  cursor: var(--cursor-default);
+  scroll-behavior: smooth;
+}
+
+/* Selection Highlight */
+::selection {
+  background-color: var(--color-gold-500);
+  color: var(--color-background);
+}
+
+/* Custom Gold Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: var(--color-surface-500);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--color-gold-600);
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-gold-400);
+}
+
+/* --- TYPOGRAPHY RULES & CAPITALIZATION --- */
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-family-heading);
+  color: var(--color-gold-500);
+  text-transform: capitalize;
+  letter-spacing: 0.5px;
+  line-height: 1.3;
+  margin-bottom: 0.5em;
+}
+
+label {
+  font-family: var(--font-family-heading);
+  text-transform: capitalize;
+}
+
+button {
+  font-family: var(--font-family-heading);
+  cursor: var(--cursor-pointer);
+}
+
+/* --- LINK HOVER ANIMATION (Right to Left) --- */
+a {
+  color: var(--color-gold-500);
+  text-decoration: none;
+  position: relative;
+  transition: color 0.3s ease;
+  cursor: var(--cursor-pointer);
+}
+
+/* Links underline animation from right to left */
+a:not(.no-underline):not(.logo-link):not(.icon-link) {
+  background: linear-gradient(to right, var(--color-gold-500), var(--color-gold-500)) no-repeat right bottom;
+  background-size: 0% 2px;
+  transition: background-size 0.3s ease, color 0.3s ease;
+}
+
+a:not(.no-underline):not(.logo-link):not(.icon-link):hover {
+  color: var(--color-gold-400);
+  background-size: 100% 2px;
+  background-position: left bottom;
+}
+
+/* Logo link & icon links must NOT have underline on hover */
+.logo-link, .logo-link:hover,
+.icon-link, .icon-link:hover,
+.no-underline, .no-underline:hover {
+  background: none !important;
+  text-decoration: none !important;
+}
+
+/* --- DARKER BACKGROUND BADGES, TOASTS, CHIPS, TAGS & PILLS --- */
+.badge, .chip, .tag, .pill, .tooltip, .toast, .snackbar, .notification-bubble {
+  background-color: var(--color-surface-400);
+  color: var(--color-gold-100);
+  border: 1px solid var(--color-gold-800);
+  border-radius: 20px;
+  padding: 4px 12px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  box-shadow: var(--elevation-1);
+}
+
+.badge-success, .chip-success {
+  background-color: var(--color-success-900);
+  color: var(--color-success-100);
+  border-color: var(--color-success-700);
+}
+
+.badge-danger, .chip-danger {
+  background-color: var(--color-error-900);
+  color: var(--color-error-100);
+  border-color: var(--color-error-700);
+}
+
+.badge-warning, .chip-warning {
+  background-color: var(--color-warning-900);
+  color: var(--color-warning-100);
+  border-color: var(--color-warning-700);
+}
+
+/* --- CIRCULAR BACKGROUND FOR ICONS (No icon scaling) --- */
+.icon-circle {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: var(--color-surface-400);
+  color: var(--color-gold-500);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.icon-circle:hover {
+  background-color: var(--color-gold-500);
+  color: var(--color-surface-900);
+}
+
+.icon-circle-lg {
+  width: 52px;
+  height: 52px;
+}
+
+.icon-circle-sm {
+  width: 32px;
+  height: 32px;
+}
+
+/* --- FORM ELEMENTS STYLING & INPUT CURSOR --- */
+input, select, textarea {
+  font-family: var(--font-family-body);
+  caret-color: var(--color-gold-500); /* Blinking gold cursor */
+}
+
+input[type="checkbox"], input[type="radio"] {
+  accent-color: var(--color-gold-500);
+  cursor: var(--cursor-pointer);
+}
+
+/* Loading state helper */
+.is-loading {
+  cursor: var(--cursor-loading) !important;
+}
+
+/* --- RESPONSIVE CONTAINER & CARD STYLES --- */
+.container {
+  width: 100%;
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+.card {
+  background-color: var(--color-surface-500);
+  border: 1px solid rgba(229, 181, 103, 0.15);
+  border-radius: 12px;
+  padding: 24px;
+  box-shadow: var(--elevation-2);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card:hover {
+  box-shadow: var(--elevation-3);
+}
+
+/* --- LAYOUT WRAPPER --- */
+#app {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+main.main-content {
+  flex: 1;
+  padding: 40px 0;
+}
