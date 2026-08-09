@@ -148,7 +148,7 @@ const handleInput = (event) => {
   height: 48px;
   padding: 0 16px;
   background-color: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(229, 181, 103, 0.25);
+  border: 1px solid rgba(243, 198, 73, 0.25);
   border-radius: 8px;
   color: #ffffff;
   font-size: 1rem;
@@ -166,8 +166,8 @@ const handleInput = (event) => {
 .custom-input-field:focus {
   outline: none;
   border-color: var(--color-gold-500);
-  background-color: rgba(229, 181, 103, 0.08);
-  box-shadow: 0 0 0 3px rgba(229, 181, 103, 0.15);
+  background-color: rgba(243, 198, 73, 0.08);
+  box-shadow: 0 0 0 3px rgba(243, 198, 73, 0.15);
 }
 
 .custom-input-field::placeholder {

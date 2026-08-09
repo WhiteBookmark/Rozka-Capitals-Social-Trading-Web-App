@@ -235,7 +235,7 @@ const showForgotNotice = () => {
   text-align: center;
   margin-top: 28px;
   padding-top: 20px;
-  border-top: 1px solid rgba(229, 181, 103, 0.15);
+  border-top: 1px solid rgba(243, 198, 73, 0.15);
   font-size: 0.9rem;
   color: var(--color-grey-300);
 }

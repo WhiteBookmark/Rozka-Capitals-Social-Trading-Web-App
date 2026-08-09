@@ -84,7 +84,7 @@ const handleLogout = () => {
 <style scoped>
 .site-header {
   background-color: var(--color-surface-500);
-  border-bottom: 1px solid rgba(229, 181, 103, 0.2);
+  border-bottom: 1px solid rgba(243, 198, 73, 0.2);
   position: sticky;
   top: 0;
   z-index: 1000;
@@ -160,7 +160,7 @@ const handleLogout = () => {
   background-color: var(--color-surface-400);
   padding: 6px 12px;
   border-radius: 20px;
-  border: 1px solid rgba(229, 181, 103, 0.2);
+  border: 1px solid rgba(243, 198, 73, 0.2);
 }
 
 .user-avatar {
@@ -200,7 +200,7 @@ const handleLogout = () => {
 }
 
 .logout-btn:hover {
-  background-color: rgba(229, 181, 103, 0.1);
+  background-color: rgba(243, 198, 73, 0.1);
   color: var(--color-error-500);
 }
 
@@ -218,7 +218,7 @@ const handleLogout = () => {
 }
 
 .btn-login:hover {
-  background-color: rgba(229, 181, 103, 0.1);
+  background-color: rgba(243, 198, 73, 0.1);
 }
 
 .btn-register {
@@ -265,7 +265,7 @@ const handleLogout = () => {
 .mobile-nav-link {
   font-size: 1.05rem;
   padding: 8px 0;
-  border-bottom: 1px solid rgba(229, 181, 103, 0.08);
+  border-bottom: 1px solid rgba(243, 198, 73, 0.08);
 }
 
 .mobile-auth-group {
