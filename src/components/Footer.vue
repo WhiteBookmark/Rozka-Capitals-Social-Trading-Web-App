@@ -38,6 +38,7 @@
           <h4 class="footer-col-title">Client Workspace</h4>
           <ul class="footer-links-list">
             <li><router-link to="/dashboard">Social Dashboard</router-link></li>
+            <li><router-link to="/investor">Investor Center</router-link></li>
             <li><router-link to="/login">Account Login</router-link></li>
             <li><router-link to="/register">Open Account</router-link></li>
           </ul>

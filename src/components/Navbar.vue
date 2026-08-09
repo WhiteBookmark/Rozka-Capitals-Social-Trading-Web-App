@@ -13,6 +13,7 @@
       <!-- Desktop Navigation Links -->
       <nav class="desktop-nav">
         <router-link to="/dashboard" class="nav-link">Social Dashboard</router-link>
+        <router-link to="/investor" class="nav-link">Investor Center</router-link>
       </nav>
 
       <!-- User Auth Actions / Status -->
@@ -50,6 +51,7 @@
     <Transition name="drawer">
       <div v-if="isMobileMenuOpen" class="mobile-nav-drawer">
         <router-link to="/dashboard" class="mobile-nav-link" @click="isMobileMenuOpen = false">Social Dashboard</router-link>
+        <router-link to="/investor" class="mobile-nav-link" @click="isMobileMenuOpen = false">Investor Center</router-link>
         
         <div class="mobile-auth-group">
           <template v-if="authStore.isLoggedIn">
