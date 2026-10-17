@@ -1099,55 +1099,113 @@
 
         <!-- Main 2-Column Layout: Left (Trending) & Right (Feed) -->
         <div class="community-two-column-layout">
-          <!-- Left Column: Trending Widget (Matching Image 2) -->
-          <aside class="community-trending-sidebar card" aria-label="Trending Topics">
-            <div class="trending-header">
-              <span class="trending-title">Trending</span>
-              <span class="trending-subtitle">last 24 hours · posts</span>
+          <!-- Left Column: Trending Widget & Hot Threads Widget (Matching Images 2 & 3) -->
+          <aside class="community-sidebar-column">
+            <!-- Trending Card -->
+            <div class="community-trending-card card" aria-label="Trending Topics">
+              <div class="trending-header">
+                <span class="trending-title">Trending</span>
+                <span class="trending-subtitle">last 24 hours · posts</span>
+              </div>
+
+              <div class="trending-list">
+                <div
+                  v-for="trend in trendingTopics"
+                  :key="trend.id"
+                  class="trending-item-row"
+                  :class="{ 'is-active-filter': activeCommunityFilter === trend.label }"
+                  @click="toggleCommunityFilter(trend.label)"
+                  role="button"
+                  tabindex="0"
+                >
+                  <!-- Left Identifier: Symbol / Tag / Master -->
+                  <div class="trending-left-meta">
+                    <!-- Illustrated avatar for Master or Channel -->
+                    <div v-if="trend.avatarType" class="trending-avatar-circle">
+                      <svg v-if="trend.avatarType === 'male_suit'" viewBox="0 0 36 36" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M18 10c-3 0-4.5 2-4.5 4.5v1c0 2.5 2 4 4.5 4s4.5-1.5 4.5-4v-1c0-2.5-1.5-4.5-4.5-4.5z"/>
+                        <path d="M13 11c1-2.5 3-4 5-4s4 1.5 5 4"/>
+                        <path d="M9 30c0-6 4-8 9-8s9 2 9 8"/>
+                        <path d="M15 22l3 5 3-5"/>
+                      </svg>
+                      <svg v-else viewBox="0 0 36 36" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M18 10c-2.5 0-4 1.8-4 4v1c0 2.2 1.8 4 4 4s4-1.8 4-4v-1c0-2.2-1.5-4-4-4z"/>
+                        <path d="M12 11c1-2.5 3-3.5 6-3.5s5 1 6 3.5"/>
+                        <path d="M9 30c0-6 4-8 9-8s9 2 9 8"/>
+                      </svg>
+                    </div>
+                    <!-- Symbol / Tag Text -->
+                    <span class="trending-label" :class="{ 'tag-hash': trend.type === 'tag' }">
+                      {{ trend.label }}
+                    </span>
+
+                    <!-- Mini Sentiment Ratio Bar (Green/Red) -->
+                    <div v-if="trend.type === 'sentiment'" class="mini-sentiment-bar" title="Community Bias Ratio">
+                      <div class="sentiment-bar-green" :style="{ width: trend.bullish + '%' }"></div>
+                      <div class="sentiment-bar-red" :style="{ width: trend.bearish + '%' }"></div>
+                    </div>
+                  </div>
+
+                  <!-- Right Count: e.g. "33 posts" -->
+                  <div class="trending-right-count">
+                    <strong class="count-num text-success">{{ trend.posts }}</strong>
+                    <span class="count-lbl">posts</span>
+                  </div>
+                </div>
+              </div>
             </div>
 
-            <div class="trending-list">
-              <div
-                v-for="trend in trendingTopics"
-                :key="trend.id"
-                class="trending-item-row"
-                :class="{ 'is-active-filter': activeCommunityFilter === trend.label }"
-                @click="toggleCommunityFilter(trend.label)"
-                role="button"
-                tabindex="0"
-              >
-                <!-- Left Identifier: Symbol / Tag / Master -->
-                <div class="trending-left-meta">
-                  <!-- Illustrated avatar for Master or Channel -->
-                  <div v-if="trend.avatarType" class="trending-avatar-circle">
-                    <svg v-if="trend.avatarType === 'male_suit'" viewBox="0 0 36 36" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-                      <path d="M18 10c-3 0-4.5 2-4.5 4.5v1c0 2.5 2 4 4.5 4s4.5-1.5 4.5-4v-1c0-2.5-1.5-4.5-4.5-4.5z"/>
+            <!-- Hot Threads Card (Below Trending, Matching Image 2) -->
+            <div class="community-hot-threads-card card" aria-label="Hot Threads">
+              <div class="hot-threads-header">
+                <h3 class="hot-threads-title">Hot threads</h3>
+              </div>
+
+              <div class="hot-threads-list">
+                <div
+                  v-for="thread in hotThreads"
+                  :key="thread.id"
+                  class="hot-thread-item-row"
+                  @click="openHotThreadModal(thread)"
+                  role="button"
+                  tabindex="0"
+                >
+                  <div class="hot-thread-avatar-circle">
+                    <svg v-if="thread.avatarType === 'male_suit'" viewBox="0 0 36 36" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M18 10c-3 0-4.5 1.8-4.5 4v1c0 2.5 2 4.5 4.5 4.5s4.5-2 4.5-4.5v-1c0-2.2-1.5-4-4.5-4z"/>
                       <path d="M13 11c1-2.5 3-4 5-4s4 1.5 5 4"/>
                       <path d="M9 30c0-6 4-8 9-8s9 2 9 8"/>
                       <path d="M15 22l3 5 3-5"/>
                     </svg>
-                    <svg v-else viewBox="0 0 36 36" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-                      <path d="M18 10c-2.5 0-4 1.8-4 4v1c0 2.2 1.8 4 4 4s4-1.8 4-4v-1c0-2.2-1.5-4-4-4z"/>
-                      <path d="M12 11c1-2.5 3-3.5 6-3.5s5 1 6 3.5"/>
+                    <svg v-else-if="thread.avatarType === 'hat_jacket'" viewBox="0 0 36 36" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M18 12c-2.5 0-4 1.8-4 4v1c0 2.2 1.8 3.8 4 3.8s4-1.6 4-3.8v-1c0-2.2-1.5-4-4-4z"/>
+                      <path d="M11 12c2-1 4.5-1.5 7-1.5s5 0.5 7 1.5"/>
+                      <path d="M13 12c0-3 2-5 5-5s5 2 5 5"/>
+                      <path d="M9 30c0-6 4-8 9-8s9 2 9 8"/>
+                    </svg>
+                    <svg v-else-if="thread.avatarType === 'male_glasses'" viewBox="0 0 36 36" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M18 10c-3 0-4.5 1.8-4.5 4v1c0 2.5 2 4.5 4.5 4.5s4.5-2 4.5-4.5v-1c0-2.2-1.5-4-4.5-4z"/>
+                      <circle cx="15.5" cy="14" r="2"/>
+                      <circle cx="20.5" cy="14" r="2"/>
+                      <line x1="17.5" y1="14" x2="18.5" y2="14"/>
+                      <path d="M13 10c1-2.5 3-3.5 5-3.5s4 1 5 3.5"/>
+                      <path d="M9 30c0-6 4-8 9-8s9 2 9 8"/>
+                    </svg>
+                    <svg v-else viewBox="0 0 36 36" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M18 10c-3 0-5 2-5 4v1c0 2.5 2 4.5 5 4.5s5-2 5-4.5v-1c0-2-2-4-5-4z"/>
+                      <path d="M12 12c-1-1-2-1-3 0s-1 3 0 4"/>
+                      <path d="M24 12c1-1 2-1 3 0s1 3 0 4"/>
+                      <path d="M13 10c0-3 2.5-4 5-4s5 1 5 4"/>
                       <path d="M9 30c0-6 4-8 9-8s9 2 9 8"/>
                     </svg>
                   </div>
-                  <!-- Symbol / Tag Text -->
-                  <span class="trending-label" :class="{ 'tag-hash': trend.type === 'tag' }">
-                    {{ trend.label }}
-                  </span>
-
-                  <!-- Mini Sentiment Ratio Bar (Green/Red) -->
-                  <div v-if="trend.type === 'sentiment'" class="mini-sentiment-bar" title="Community Bias Ratio">
-                    <div class="sentiment-bar-green" :style="{ width: trend.bullish + '%' }"></div>
-                    <div class="sentiment-bar-red" :style="{ width: trend.bearish + '%' }"></div>
+                  <div class="hot-thread-text-stack">
+                    <span class="hot-thread-title-text">{{ thread.title }}</span>
+                    <div class="hot-thread-meta-row">
+                      <span v-if="thread.isHot" class="badge-hot">HOT</span>
+                      <span class="hot-thread-meta-info">{{ thread.repliesCount }} replies · {{ thread.time }}</span>
+                    </div>
                   </div>
-                </div>
-
-                <!-- Right Count: e.g. "33 posts" -->
-                <div class="trending-right-count">
-                  <strong class="count-num text-success">{{ trend.posts }}</strong>
-                  <span class="count-lbl">posts</span>
                 </div>
               </div>
             </div>
@@ -1230,6 +1288,9 @@
                 <!-- Prominent Realized Profit (Matching Images 3, 4, 5) -->
                 <div v-if="post.profit !== null && post.profit !== undefined" class="trade-profit-highlight text-success">
                   +${{ formatCurrency(post.profit) }}
+                </div>
+                <div v-else-if="post.formattedReturn" class="trade-profit-highlight text-success">
+                  {{ post.formattedReturn }}
                 </div>
               </div>
 
@@ -1581,6 +1642,129 @@
         </ul>
       </div>
     </CustomModal>
+
+    <!-- ===================================================================
+         HOT THREAD MODAL DIALOG (Matching User Screenshots 1 & 3)
+         =================================================================== -->
+    <Teleport to="body">
+      <div
+        v-if="isHotThreadModalOpen && activeHotThread"
+        class="thread-dialog-overlay"
+        @click.self="isHotThreadModalOpen = false"
+      >
+        <div class="thread-dialog-card card" role="dialog" aria-modal="true" :aria-label="activeHotThread.title">
+          <!-- Top Header with Thread Title & Close X icon -->
+          <div class="thread-dialog-header">
+            <h4 class="dialog-header-title">{{ activeHotThread.title }}</h4>
+            <button
+              type="button"
+              class="dialog-close-btn icon-link"
+              @click="isHotThreadModalOpen = false"
+              aria-label="Close dialog"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            </button>
+          </div>
+
+          <!-- Dialog Scrollable Content -->
+          <div class="thread-dialog-scroll-body">
+            <!-- Author Meta Row -->
+            <div class="dialog-author-row">
+              <div class="dialog-author-avatar-circle">
+                <svg viewBox="0 0 36 36" width="30" height="30" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M18 10c-3 0-4.5 1.8-4.5 4v1c0 2.5 2 4.5 4.5 4.5s4.5-2 4.5-4.5v-1c0-2.2-1.5-4-4.5-4z"/>
+                  <path d="M13 11c1-2.5 3-4 5-4s4 1.5 5 4"/>
+                  <path d="M9 30c0-6 4-8 9-8s9 2 9 8"/>
+                  <path d="M15 22l3 5 3-5"/>
+                </svg>
+              </div>
+              <div class="dialog-author-meta">
+                <strong class="dialog-user-id">{{ activeHotThread.author }}</strong>
+                <span class="dialog-time-ago">{{ activeHotThread.time }}</span>
+              </div>
+            </div>
+
+            <!-- Thread Headline -->
+            <h2 class="dialog-thread-headline">{{ activeHotThread.title }}</h2>
+
+            <!-- Paragraphs of Discussion -->
+            <div class="dialog-paragraphs-list">
+              <p
+                v-for="(para, pIdx) in activeHotThread.paragraphs"
+                :key="pIdx"
+                class="dialog-body-p"
+              >
+                {{ para }}
+              </p>
+            </div>
+
+            <!-- Muted Educational Disclaimer -->
+            <p class="dialog-disclaimer-text">{{ activeHotThread.disclaimer }}</p>
+
+            <!-- Like Interaction Counter -->
+            <div class="dialog-reactions-bar">
+              <button
+                type="button"
+                class="thread-like-counter-btn"
+                :class="{ 'is-liked': activeHotThread.isLiked }"
+                @click="toggleHotThreadLike(activeHotThread)"
+                title="Like thread"
+              >
+                <svg class="heart-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" :fill="activeHotThread.isLiked ? 'hsl(352, 90%, 62%)' : 'none'" :stroke="activeHotThread.isLiked ? 'hsl(352, 90%, 62%)' : 'currentColor'" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+                <span>{{ activeHotThread.likes }}</span>
+              </button>
+            </div>
+
+            <!-- Thread Divider Line -->
+            <div class="dialog-thread-divider"></div>
+
+            <!-- Thread Replies Stream (Matching Screenshots 1 & 3) -->
+            <div class="dialog-replies-stream">
+              <div
+                v-for="reply in activeHotThread.replies"
+                :key="reply.id"
+                class="dialog-reply-item"
+              >
+                <div class="dialog-reply-avatar-circle">
+                  <svg viewBox="0 0 36 36" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M18 10c-3 0-4.5 1.8-4.5 4v1c0 2.5 2 4.5 4.5 4.5s4.5-2 4.5-4.5v-1c0-2.2-1.5-4-4.5-4z"/>
+                    <path d="M13 11c1-2.5 3-4 5-4s4 1.5 5 4"/>
+                    <path d="M9 30c0-6 4-8 9-8s9 2 9 8"/>
+                  </svg>
+                </div>
+                <div class="dialog-reply-body">
+                  <div class="reply-meta-line">
+                    <strong class="reply-user-name">{{ reply.author }}</strong>
+                    <span class="reply-time-stamp">{{ reply.time }}</span>
+                  </div>
+                  <p class="reply-comment-text">{{ reply.text }}</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Add Reply Input Box -->
+            <div class="dialog-add-reply-box">
+              <input
+                ref="hotThreadReplyInput"
+                type="text"
+                v-model="newHotThreadReplyText"
+                placeholder="Write a reply..."
+                class="dialog-reply-input"
+                @keyup.enter="submitHotThreadReply"
+              />
+              <button
+                type="button"
+                class="dialog-reply-send-btn"
+                :disabled="!newHotThreadReplyText || !newHotThreadReplyText.trim()"
+                @click="submitHotThreadReply"
+              >
+                Reply
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </Teleport>
 
     <!-- Global Floating Toast Notification -->
     <GlobalToast
@@ -2008,6 +2192,48 @@ const communityFeed = ref([
       { id: 'comm_2', author: '23****4863', time: '8 min ago', content: 'Steady work.' },
     ],
   },
+  {
+    id: 'post_4',
+    userId: '22****1223',
+    avatarType: 'male_suit',
+    status: 'Closed in profit',
+    time: '23 h',
+    content: 'Closed a trade on TRXUSD in profit.',
+    direction: 'Short',
+    lots: null,
+    symbol: 'TRXUSD',
+    profit: null,
+    formattedReturn: '+0.00%',
+    master: 'Crypto Swing',
+    hasPositionDetails: false,
+    isDetailsOpen: false,
+    positionDetails: null,
+    isLiked: false,
+    likes: 0,
+    isCommentsOpen: false,
+    comments: [],
+  },
+  {
+    id: 'post_5',
+    userId: '22****1223',
+    avatarType: 'curls_tshirt',
+    status: 'Closed in profit',
+    time: '23 h',
+    content: 'Closed a trade on TRXUSD in profit.',
+    direction: 'Long',
+    lots: null,
+    symbol: 'TRXUSD',
+    profit: null,
+    formattedReturn: '+0.00%',
+    master: 'Aggressive Multi',
+    hasPositionDetails: false,
+    isDetailsOpen: false,
+    positionDetails: null,
+    isLiked: false,
+    likes: 0,
+    isCommentsOpen: false,
+    comments: [],
+  },
 ]);
 
 const filteredCommunityPosts = computed(() => {
@@ -2058,6 +2284,173 @@ const communityLiveReactions = ref([
   { id: 'r6', type: 'like', user: '23****3077', text: 'liked a post on BTCUSD', time: '5 min' },
   { id: 'r7', type: 'like', user: '23****7274', text: 'liked 2 posts on BTCUSD', time: '6 min' },
 ]);
+
+// --- HOT THREADS STATE & MODAL DIALOG (Matching User Screenshots 1, 2, 3) ---
+const hotThreads = ref([
+  {
+    id: 'thread_1',
+    title: 'EURUSD this week: anyone with a bias?',
+    isHot: true,
+    repliesCount: 12,
+    time: '5 h',
+    author: '22****4190',
+    avatarType: 'male_suit',
+    paragraphs: [
+      'ECB rate decision commentary is coming up on Thursday. The pair has tested support near 1.0820 three times without breaking lower.',
+      'Are you holding positions through the announcement or scaling back copier allocations to stay risk-neutral?',
+      'Institutional flow data suggests large buy orders parked around 1.0800, but a hawkish dollar could trigger volatility.',
+    ],
+    disclaimer: 'Educational only: nothing here is a recommendation to trade, and past results do not promise future ones.',
+    likes: 14,
+    isLiked: false,
+    replies: [
+      { id: 'r1_1', author: '23****0912', time: '4 h ago', text: 'Scaled my copiers back to 50% until the rate statement prints.' },
+      { id: 'r1_2', author: '22****3310', time: '3 h ago', text: 'Alex Warren usually hedges into the European open; sticking with the mirror.' },
+      { id: 'r1_3', author: '23****5114', time: '2 h ago', text: 'Watching 1.0860 resistance for confirmation before adjusting size.' },
+    ],
+  },
+  {
+    id: 'thread_2',
+    title: 'What drawdown stop do you set on a copy?',
+    isHot: false,
+    repliesCount: 10,
+    time: '3 h',
+    author: '23****6751',
+    avatarType: 'hat_jacket',
+    paragraphs: [
+      'Drawdown is how far an account falls from its highest point before it recovers. Every master has periods of it, including the ones with a strong record.',
+      'A drawdown stop on a copy closes the copy if it falls by the amount you choose. It is a way of deciding in advance how much of a bad patch you are willing to sit through.',
+      'Set it too tight and an ordinary dip can stop the copy; too loose and it protects little. A master\'s own deepest drawdown in their history is a common reference point.',
+    ],
+    disclaimer: 'Educational only: nothing here is a recommendation to trade, and past results do not promise future ones.',
+    likes: 0,
+    isLiked: false,
+    replies: [
+      { id: 'r2_1', author: '23****1336', time: '14 h ago', text: "It's the one setting I never skip." },
+      { id: 'r2_2', author: '23****8834', time: '14 h ago', text: 'Hard to pick, I changed mine twice.' },
+      { id: 'r2_3', author: '23****9132', time: '14 h ago', text: 'Got stopped out once on a normal dip. Widened it after.' },
+    ],
+  },
+  {
+    id: 'thread_3',
+    title: 'What do you look at first when picking a master?',
+    isHot: false,
+    repliesCount: 8,
+    time: '1 h',
+    author: '23****5501',
+    avatarType: 'curls_tshirt',
+    paragraphs: [
+      'Return over max drawdown is my primary screening metric before looking at 30-day percentage returns.',
+      'A master who made 80% with an 8% max drawdown demonstrates superior risk control compared to one who made 150% while enduring a 45% drawdown.',
+      'Also look at average holding time—scalpers versus swing traders require very different copier capital expectations.',
+    ],
+    disclaimer: 'Educational only: nothing here is a recommendation to trade, and past results do not promise future ones.',
+    likes: 6,
+    isLiked: false,
+    replies: [
+      { id: 'r3_1', author: '23****7412', time: '45 min ago', text: 'Track record length (>6 months minimum) and max drawdown <12%.' },
+      { id: 'r3_2', author: '22****9018', time: '30 min ago', text: 'Audited equity curve smoothness tells you if they manage position sizing cleanly.' },
+    ],
+  },
+  {
+    id: 'thread_4',
+    title: 'BTCUSD over the weekend: do you keep copies running?',
+    isHot: false,
+    repliesCount: 8,
+    time: '16 h',
+    author: '22****8829',
+    avatarType: 'male_glasses',
+    paragraphs: [
+      'Weekend crypto liquidity tends to thin out on Saturday nights, creating occasional wick-hunting spikes before Sunday evening Asian session open.',
+      'Do you keep algorithmic crypto copiers running through the weekend, or do you toggle pause on Friday afternoon?',
+    ],
+    disclaimer: 'Educational only: nothing here is a recommendation to trade, and past results do not promise future ones.',
+    likes: 3,
+    isLiked: false,
+    replies: [
+      { id: 'r4_1', author: '23****4411', time: '12 h ago', text: 'Crypto Swing has tight SLs on weekend trades so I keep it running 24/7.' },
+      { id: 'r4_2', author: '23****1904', time: '8 h ago', text: 'I keep mine active. The best breakout trades often fire on Saturday mornings.' },
+    ],
+  },
+  {
+    id: 'thread_5',
+    title: 'How do you size copies on a small account?',
+    isHot: false,
+    repliesCount: 7,
+    time: '15 min',
+    author: '23****6190',
+    avatarType: 'male_suit',
+    paragraphs: [
+      'When copying masters on accounts under $1,000, fixed proportional lot scaling is vital to ensure minimum contract sizes do not skew your margin level.',
+      'What allocation multiplier do you find best balances profit participation with drawdown protection?',
+    ],
+    disclaimer: 'Educational only: nothing here is a recommendation to trade, and past results do not promise future ones.',
+    likes: 2,
+    isLiked: false,
+    replies: [
+      { id: 'r5_1', author: '23****2219', time: '10 min ago', text: 'Start at 0.5x ratio until you see 30 days of real equity curve consistency.' },
+      { id: 'r5_2', author: '22****4481', time: '5 min ago', text: 'Never allocate more than 30% of total equity to a single high-beta strategy.' },
+    ],
+  },
+  {
+    id: 'thread_6',
+    title: 'Gold has ranged all week. Who is waiting for the break?',
+    isHot: false,
+    repliesCount: 5,
+    time: '30 min',
+    author: '23****1108',
+    avatarType: 'curls_tshirt',
+    paragraphs: [
+      'XAUUSD has traded in a tight 30-dollar channel all week with volume drying up near the middle of the range.',
+      'Compression like this usually precedes an aggressive expansion phase. Are your master allocations positioned for a breakout?',
+    ],
+    disclaimer: 'Educational only: nothing here is a recommendation to trade, and past results do not promise future ones.',
+    likes: 5,
+    isLiked: false,
+    replies: [
+      { id: 'r6_1', author: '23****9901', time: '20 min ago', text: 'Watching for the fakeout below 2,638 before entering long.' },
+    ],
+  },
+]);
+
+const isHotThreadModalOpen = ref(false);
+const activeHotThread = ref(null);
+const hotThreadReplyInput = ref(null);
+const newHotThreadReplyText = ref('');
+
+const openHotThreadModal = (thread) => {
+  activeHotThread.value = thread;
+  newHotThreadReplyText.value = '';
+  isHotThreadModalOpen.value = true;
+  nextTick(() => {
+    hotThreadReplyInput.value?.focus();
+  });
+};
+
+const toggleHotThreadLike = (thread) => {
+  if (thread.isLiked) {
+    thread.isLiked = false;
+    thread.likes = Math.max(0, thread.likes - 1);
+  } else {
+    thread.isLiked = true;
+    thread.likes += 1;
+  }
+};
+
+const submitHotThreadReply = () => {
+  if (!activeHotThread.value) return;
+  const text = (newHotThreadReplyText.value || '').trim();
+  if (!text) return;
+  activeHotThread.value.replies.push({
+    id: 'r_new_' + Date.now(),
+    author: '23****9988',
+    time: 'Just now',
+    text: text,
+  });
+  activeHotThread.value.repliesCount += 1;
+  newHotThreadReplyText.value = '';
+  showToast('Reply published to thread.', 'success');
+};
 
 // Formatting utilities
 const formatCurrency = (val) => {
@@ -4265,14 +4658,106 @@ onUnmounted(() => {
   }
 }
 
-/* --- Left Column: Trending Sidebar --- */
-.community-trending-sidebar {
+/* --- Left Column: Sidebar Cards (Trending & Hot Threads) --- */
+.community-sidebar-column {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  position: sticky;
+  top: 90px;
+}
+
+.community-trending-card,
+.community-hot-threads-card {
   background-color: var(--color-surface-700);
   border: 1px solid var(--color-surface-500);
   border-radius: 14px;
   padding: 22px 18px;
-  position: sticky;
-  top: 90px;
+}
+
+.hot-threads-header {
+  margin-bottom: 14px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--color-surface-500);
+}
+
+.hot-threads-title {
+  font-family: var(--font-family-heading);
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: hsl(0, 0%, 100%);
+  margin: 0;
+}
+
+.hot-threads-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.hot-thread-item-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 10px 10px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  user-select: none;
+}
+
+.hot-thread-item-row:hover {
+  background-color: var(--color-surface-600);
+}
+
+.hot-thread-avatar-circle {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background-color: hsl(0, 0%, 96%);
+  color: hsl(0, 0%, 12%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.hot-thread-text-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+  flex: 1;
+}
+
+.hot-thread-title-text {
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: hsl(0, 0%, 96%);
+  line-height: 1.35;
+}
+
+.hot-thread-meta-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 2px;
+}
+
+.badge-hot {
+  background-color: var(--color-gold-500);
+  color: hsl(0, 0%, 10%);
+  font-weight: 800;
+  font-size: 0.68rem;
+  padding: 1px 6px;
+  border-radius: 4px;
+  letter-spacing: 0.04em;
+}
+
+.hot-thread-meta-info {
+  font-size: 0.76rem;
+  color: var(--color-grey-400);
 }
 
 .trending-header {
@@ -4921,6 +5406,294 @@ onUnmounted(() => {
   font-size: 0.78rem;
   color: var(--color-grey-400);
   flex-shrink: 0;
+}
+
+/* --- Hot Thread Dialog Modal (Matching Screenshots 1 & 3) --- */
+.thread-dialog-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: hsl(0 0% 0% / 0.82);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10000;
+  padding: 20px;
+  /* Strictly no popup animation per user rules */
+  animation: none;
+  transition: none;
+}
+
+.thread-dialog-card {
+  background-color: var(--color-surface-700);
+  border: 1px solid var(--color-surface-500);
+  border-radius: 14px;
+  width: 100%;
+  max-width: 760px;
+  max-height: 88vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  box-shadow: var(--elevation-5);
+  animation: none;
+  transition: none;
+}
+
+.thread-dialog-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 24px;
+  border-bottom: 1px solid var(--color-surface-500);
+  background-color: var(--color-surface-700);
+  flex-shrink: 0;
+}
+
+.dialog-header-title {
+  font-family: var(--font-family-heading);
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: hsl(0, 0%, 100%);
+  margin: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  padding-right: 14px;
+}
+
+.dialog-close-btn {
+  background: none;
+  border: none;
+  color: var(--color-grey-300);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6px;
+  border-radius: 6px;
+  transition: color 0.2s ease, background-color 0.2s ease;
+}
+
+.dialog-close-btn:hover {
+  color: var(--color-gold-400);
+  background-color: var(--color-surface-600);
+}
+
+.thread-dialog-scroll-body {
+  padding: 24px 28px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.dialog-author-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.dialog-author-avatar-circle {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: hsl(0, 0%, 96%);
+  color: hsl(0, 0%, 12%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.dialog-author-meta {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+}
+
+.dialog-user-id {
+  font-family: var(--font-family-heading);
+  font-size: 0.98rem;
+  font-weight: 700;
+  color: hsl(0, 0%, 100%);
+}
+
+.dialog-time-ago {
+  font-size: 0.82rem;
+  color: var(--color-grey-400);
+}
+
+.dialog-thread-headline {
+  font-family: var(--font-family-heading);
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: hsl(0, 0%, 100%);
+  margin: 4px 0 0 0;
+  line-height: 1.35;
+}
+
+.dialog-paragraphs-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 4px;
+}
+
+.dialog-body-p {
+  font-size: 0.95rem;
+  color: hsl(0, 0%, 92%);
+  line-height: 1.6;
+  margin: 0;
+}
+
+.dialog-disclaimer-text {
+  font-size: 0.8rem;
+  color: var(--color-grey-400);
+  margin: 6px 0 0 0;
+  font-style: italic;
+}
+
+.dialog-reactions-bar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 2px;
+}
+
+.thread-like-counter-btn {
+  background: none;
+  border: none;
+  color: var(--color-grey-300);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.88rem;
+  font-weight: 600;
+  padding: 4px 8px;
+  border-radius: 6px;
+  transition: all 0.2s ease;
+}
+
+.thread-like-counter-btn:hover {
+  color: var(--color-gold-400);
+  background-color: var(--color-surface-600);
+}
+
+.thread-like-counter-btn.is-liked {
+  color: hsl(352, 90%, 62%);
+}
+
+.dialog-thread-divider {
+  height: 1px;
+  background-color: var(--color-surface-500);
+  margin: 6px 0;
+}
+
+.dialog-replies-stream {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.dialog-reply-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.dialog-reply-avatar-circle {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background-color: hsl(0, 0%, 96%);
+  color: hsl(0, 0%, 12%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.dialog-reply-body {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  flex: 1;
+}
+
+.reply-meta-line {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+}
+
+.reply-user-name {
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: hsl(0, 0%, 98%);
+}
+
+.reply-time-stamp {
+  font-size: 0.78rem;
+  color: var(--color-grey-400);
+}
+
+.reply-comment-text {
+  font-size: 0.9rem;
+  color: var(--color-grey-200);
+  line-height: 1.45;
+  margin: 0;
+}
+
+.dialog-add-reply-box {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 14px;
+  padding-top: 14px;
+  border-top: 1px solid var(--color-surface-500);
+}
+
+.dialog-reply-input {
+  flex: 1;
+  padding: 10px 16px;
+  background-color: var(--color-surface-600);
+  border: 1px solid var(--color-surface-400);
+  border-radius: 20px;
+  color: hsl(0, 0%, 100%);
+  font-family: var(--font-family-body);
+  font-size: 0.88rem;
+}
+
+.dialog-reply-input:focus {
+  outline: none;
+  border-color: var(--color-gold-500);
+  box-shadow: 0 0 0 2px var(--color-gold-alpha-15);
+}
+
+.dialog-reply-send-btn {
+  padding: 9px 20px;
+  background-color: var(--color-gold-500);
+  color: hsl(0, 0%, 10%);
+  border: none;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.dialog-reply-send-btn:hover:not(:disabled) {
+  background-color: var(--color-gold-400);
+}
+
+.dialog-reply-send-btn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
 }
 
 /* ===================================================================
