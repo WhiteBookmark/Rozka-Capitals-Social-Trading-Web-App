@@ -1092,74 +1092,347 @@
       </section>
 
       <!-- ===================================================================
-           TAB 5: COMMUNITY FEED
+           TAB 5: COMMUNITY FEED (Matching user screenshots)
            =================================================================== -->
       <section v-else-if="activeTab === 'community'" class="tab-content-section" aria-labelledby="community-heading">
-        <div class="section-title-bar">
-          <h2 id="community-heading" class="section-title">Rozka Social Trading Community</h2>
-          <p class="section-subtitle">
-            Connect with copiers worldwide, discuss trade setups, and track community market sentiment in real time.
-          </p>
-        </div>
+        <h2 id="community-heading" class="community-main-heading">Community</h2>
 
-        <div class="community-grid">
-          <!-- Community Discussion Posts -->
-          <div class="community-posts-column">
-            <div
-              v-for="post in communityPosts"
+        <!-- Main 2-Column Layout: Left (Trending) & Right (Feed) -->
+        <div class="community-two-column-layout">
+          <!-- Left Column: Trending Widget (Matching Image 2) -->
+          <aside class="community-trending-sidebar card" aria-label="Trending Topics">
+            <div class="trending-header">
+              <span class="trending-title">Trending</span>
+              <span class="trending-subtitle">last 24 hours · posts</span>
+            </div>
+
+            <div class="trending-list">
+              <div
+                v-for="trend in trendingTopics"
+                :key="trend.id"
+                class="trending-item-row"
+                :class="{ 'is-active-filter': activeCommunityFilter === trend.label }"
+                @click="toggleCommunityFilter(trend.label)"
+                role="button"
+                tabindex="0"
+              >
+                <!-- Left Identifier: Symbol / Tag / Master -->
+                <div class="trending-left-meta">
+                  <!-- Illustrated avatar for Master or Channel -->
+                  <div v-if="trend.avatarType" class="trending-avatar-circle">
+                    <svg v-if="trend.avatarType === 'male_suit'" viewBox="0 0 36 36" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M18 10c-3 0-4.5 2-4.5 4.5v1c0 2.5 2 4 4.5 4s4.5-1.5 4.5-4v-1c0-2.5-1.5-4.5-4.5-4.5z"/>
+                      <path d="M13 11c1-2.5 3-4 5-4s4 1.5 5 4"/>
+                      <path d="M9 30c0-6 4-8 9-8s9 2 9 8"/>
+                      <path d="M15 22l3 5 3-5"/>
+                    </svg>
+                    <svg v-else viewBox="0 0 36 36" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M18 10c-2.5 0-4 1.8-4 4v1c0 2.2 1.8 4 4 4s4-1.8 4-4v-1c0-2.2-1.5-4-4-4z"/>
+                      <path d="M12 11c1-2.5 3-3.5 6-3.5s5 1 6 3.5"/>
+                      <path d="M9 30c0-6 4-8 9-8s9 2 9 8"/>
+                    </svg>
+                  </div>
+                  <!-- Symbol / Tag Text -->
+                  <span class="trending-label" :class="{ 'tag-hash': trend.type === 'tag' }">
+                    {{ trend.label }}
+                  </span>
+
+                  <!-- Mini Sentiment Ratio Bar (Green/Red) -->
+                  <div v-if="trend.type === 'sentiment'" class="mini-sentiment-bar" title="Community Bias Ratio">
+                    <div class="sentiment-bar-green" :style="{ width: trend.bullish + '%' }"></div>
+                    <div class="sentiment-bar-red" :style="{ width: trend.bearish + '%' }"></div>
+                  </div>
+                </div>
+
+                <!-- Right Count: e.g. "33 posts" -->
+                <div class="trending-right-count">
+                  <strong class="count-num text-success">{{ trend.posts }}</strong>
+                  <span class="count-lbl">posts</span>
+                </div>
+              </div>
+            </div>
+          </aside>
+
+          <!-- Right Column: Posts Feed (Matching Images 2, 3, 4, 5) -->
+          <main class="community-feed-column">
+            <!-- Filter banner if filter applied -->
+            <div v-if="activeCommunityFilter" class="filter-status-banner">
+              <span>Filtering by <strong>{{ activeCommunityFilter }}</strong></span>
+              <button type="button" class="clear-filter-btn icon-link" @click="activeCommunityFilter = null">Clear filter ✕</button>
+            </div>
+
+            <!-- Feed Posts -->
+            <article
+              v-for="post in filteredCommunityPosts"
               :key="post.id"
-              class="community-post-card card"
+              class="community-post-item card"
+              :class="{ 'is-featured-post': post.id === 'post_2' }"
             >
-              <div class="post-header">
-                <div class="post-author-avatar">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+              <!-- Post Header: Avatar, User ID, Status Badge, Time -->
+              <div class="post-item-header">
+                <div class="post-user-left">
+                  <div class="post-user-avatar-circle">
+                    <!-- Illustrated SVG Avatar matching screenshots -->
+                    <svg v-if="post.avatarType === 'male_glasses'" viewBox="0 0 36 36" width="28" height="28" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M18 10c-3 0-4.5 1.8-4.5 4v1c0 2.5 2 4.5 4.5 4.5s4.5-2 4.5-4.5v-1c0-2.2-1.5-4-4.5-4z"/>
+                      <circle cx="15.5" cy="14" r="2"/>
+                      <circle cx="20.5" cy="14" r="2"/>
+                      <line x1="17.5" y1="14" x2="18.5" y2="14"/>
+                      <path d="M13 10c1-2.5 3-3.5 5-3.5s4 1 5 3.5"/>
+                      <path d="M9 30c0-6 4-8 9-8s9 2 9 8"/>
+                    </svg>
+                    <svg v-else-if="post.avatarType === 'curls_tshirt'" viewBox="0 0 36 36" width="28" height="28" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M18 10c-3 0-5 2-5 4v1c0 2.5 2 4.5 5 4.5s5-2 5-4.5v-1c0-2-2-4-5-4z"/>
+                      <path d="M12 12c-1-1-2-1-3 0s-1 3 0 4"/>
+                      <path d="M24 12c1-1 2-1 3 0s1 3 0 4"/>
+                      <path d="M13 10c0-3 2.5-4 5-4s5 1 5 4"/>
+                      <path d="M9 30c0-6 4-8 9-8s9 2 9 8"/>
+                      <path d="M15 22v3c0 1.5 1.5 2.5 3 2.5s3-1 3-2.5v-3"/>
+                    </svg>
+                    <svg v-else-if="post.avatarType === 'hat_jacket'" viewBox="0 0 36 36" width="28" height="28" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M18 12c-2.5 0-4 1.8-4 4v1c0 2.2 1.8 3.8 4 3.8s4-1.6 4-3.8v-1c0-2.2-1.5-4-4-4z"/>
+                      <path d="M11 12c2-1 4.5-1.5 7-1.5s5 0.5 7 1.5"/>
+                      <path d="M13 12c0-3 2-5 5-5s5 2 5 5"/>
+                      <path d="M9 30c0-6 4-8 9-8s9 2 9 8"/>
+                    </svg>
+                    <svg v-else viewBox="0 0 36 36" width="28" height="28" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M18 10c-3 0-4 1.8-4 4v1c0 2.2 1.8 4 4 4s4-1.8 4-4v-1c0-2.2-1-4-4-4z"/>
+                      <path d="M13 11c1-2.5 2.8-3.5 5-3.5s4 1 5 3.5"/>
+                      <path d="M9 30c0-6 4-8 9-8s9 2 9 8"/>
+                    </svg>
+                  </div>
+                  <strong class="post-masked-user">{{ post.userId }}</strong>
                 </div>
-                <div class="post-author-meta">
-                  <strong class="post-author-name">{{ post.author }}</strong>
-                  <span class="post-timestamp">{{ post.time }}</span>
+
+                <div class="post-status-right">
+                  <span class="badge-closed-profit">{{ post.status }}</span>
+                  <span class="post-time-meta">{{ post.time }}</span>
                 </div>
-                <span class="badge badge-subtle">{{ post.tag }}</span>
-              </div>
-              <p class="post-body-text">{{ post.content }}</p>
-              <div class="post-footer">
-                <span class="post-stat-item">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3zM7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"/></svg>
-                  {{ post.likes }} Likes
-                </span>
-                <span class="post-stat-item">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-                  {{ post.replies }} Replies
-                </span>
-              </div>
-            </div>
-          </div>
-
-          <!-- Community Sentiment & Rules Column -->
-          <div class="community-sidebar-column">
-            <div class="sentiment-widget card">
-              <h3 class="widget-title">Copier Sentiment (24h)</h3>
-              <p class="widget-desc">Real-time aggregate direction across all copied open orders.</p>
-              
-              <div class="sentiment-meter-bar">
-                <div class="meter-segment segment-bullish" style="width: 74%"></div>
-                <div class="meter-segment segment-bearish" style="width: 26%"></div>
               </div>
 
-              <div class="sentiment-labels-row">
-                <span class="text-success"><strong>74%</strong> Long / Bullish</span>
-                <span class="text-danger"><strong>26%</strong> Short / Bearish</span>
+              <!-- Post Message Body -->
+              <p class="post-message-body">{{ post.content }}</p>
+
+              <!-- Position Tag & Profit Pill Row -->
+              <div class="post-trade-meta-row">
+                <div class="trade-pills-left">
+                  <span
+                    class="direction-pill"
+                    :class="post.direction === 'Long' ? 'pill-long' : 'pill-short'"
+                  >
+                    <span class="dir-arrow">{{ post.direction === 'Long' ? '▲' : '▼' }}</span>
+                    <span>{{ post.direction }}</span>
+                  </span>
+                  <span v-if="post.lots" class="lots-pill">{{ post.lots }} lots</span>
+                  <span class="symbol-pill">{{ post.symbol }}</span>
+                </div>
+
+                <!-- Prominent Realized Profit (Matching Images 3, 4, 5) -->
+                <div v-if="post.profit !== null && post.profit !== undefined" class="trade-profit-highlight text-success">
+                  +${{ formatCurrency(post.profit) }}
+                </div>
               </div>
+
+              <!-- Expandable Position Details Drawer Trigger (Matching Images 2, 4, 5) -->
+              <div v-if="post.hasPositionDetails" class="position-details-container">
+                <button
+                  type="button"
+                  class="position-details-toggle"
+                  @click="post.isDetailsOpen = !post.isDetailsOpen"
+                  :aria-expanded="post.isDetailsOpen"
+                >
+                  <span class="toggle-icon">{{ post.isDetailsOpen ? '▾' : '▸' }}</span>
+                  <span>Position details</span>
+                </button>
+
+                <!-- Expanded Position Details Table Grid (Matching Image 5) -->
+                <div v-if="post.isDetailsOpen" class="position-details-grid-card">
+                  <div class="details-grid-row">
+                    <div class="grid-cell">
+                      <span class="cell-label">Symbol</span>
+                      <strong class="cell-val">{{ post.positionDetails.symbol }}</strong>
+                    </div>
+                    <div class="grid-cell">
+                      <span class="cell-label">Direction</span>
+                      <strong class="cell-val text-success">{{ post.positionDetails.direction }}</strong>
+                    </div>
+                    <div class="grid-cell">
+                      <span class="cell-label">Entry price</span>
+                      <strong class="cell-val">{{ post.positionDetails.entryPrice }}</strong>
+                    </div>
+                  </div>
+
+                  <div class="details-grid-row">
+                    <div class="grid-cell">
+                      <span class="cell-label">Stop loss</span>
+                      <strong class="cell-val">{{ post.positionDetails.stopLoss }}</strong>
+                    </div>
+                    <div class="grid-cell">
+                      <span class="cell-label">Take profit</span>
+                      <strong class="cell-val">{{ post.positionDetails.takeProfit }}</strong>
+                    </div>
+                    <div class="grid-cell">
+                      <span class="cell-label">Exit price</span>
+                      <strong class="cell-val">{{ post.positionDetails.exitPrice }}</strong>
+                    </div>
+                  </div>
+
+                  <div class="details-grid-row">
+                    <div class="grid-cell">
+                      <span class="cell-label">Opened</span>
+                      <strong class="cell-val">{{ post.positionDetails.opened }}</strong>
+                    </div>
+                    <div class="grid-cell">
+                      <span class="cell-label">Closed</span>
+                      <strong class="cell-val">{{ post.positionDetails.closed }}</strong>
+                    </div>
+                    <div class="grid-cell">
+                      <span class="cell-label">Held</span>
+                      <strong class="cell-val">{{ post.positionDetails.held }}</strong>
+                    </div>
+                  </div>
+
+                  <div class="details-grid-row">
+                    <div class="grid-cell">
+                      <span class="cell-label">Risk to reward</span>
+                      <strong class="cell-val">{{ post.positionDetails.riskToReward }}</strong>
+                    </div>
+                    <div class="grid-cell">
+                      <span class="cell-label">Result</span>
+                      <strong class="cell-val text-success">{{ post.positionDetails.result }}</strong>
+                    </div>
+                    <div class="grid-cell">
+                      <!-- empty alignment cell -->
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Post Action Footer: Likes, Comments, Open & Copy Button -->
+              <div class="post-item-footer">
+                <div class="footer-reactions-left">
+                  <!-- Like Button -->
+                  <button
+                    type="button"
+                    class="post-reaction-btn"
+                    :class="{ 'is-liked': post.isLiked }"
+                    @click="handleLikePost(post)"
+                    title="Like Post"
+                  >
+                    <svg class="heart-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" :fill="post.isLiked ? 'hsl(352, 90%, 62%)' : 'none'" :stroke="post.isLiked ? 'hsl(352, 90%, 62%)' : 'currentColor'" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+                    <span>{{ post.likes }}</span>
+                  </button>
+
+                  <!-- Comments Toggle Button -->
+                  <button
+                    type="button"
+                    class="post-reaction-btn"
+                    @click="post.isCommentsOpen = !post.isCommentsOpen"
+                    title="View Comments"
+                  >
+                    <svg class="comment-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                    <span>{{ post.comments.length }}</span>
+                  </button>
+                </div>
+
+                <div class="footer-actions-right">
+                  <button
+                    type="button"
+                    class="btn-text-open"
+                    @click="post.hasPositionDetails ? (post.isDetailsOpen = !post.isDetailsOpen) : null"
+                  >
+                    Open
+                  </button>
+
+                  <!-- Yellow/Gold [ Copy ] Pill Button (Matching Images 3, 4) -->
+                  <button
+                    v-if="post.master"
+                    type="button"
+                    class="btn-copy-gold-pill"
+                    @click="openCopyModalByName(post.master)"
+                  >
+                    Copy
+                  </button>
+                </div>
+              </div>
+
+              <!-- Threaded Comments Section (Matching Image 4) -->
+              <div v-if="post.isCommentsOpen" class="post-comments-thread">
+                <div
+                  v-for="comment in post.comments"
+                  :key="comment.id"
+                  class="comment-entry-row"
+                >
+                  <div class="comment-avatar-circle">
+                    <svg viewBox="0 0 36 36" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M18 10c-3 0-4.5 2-4.5 4.5v1c0 2.5 2 4 4.5 4s4.5-1.5 4.5-4v-1c0-2.5-1.5-4.5-4.5-4.5z"/>
+                      <path d="M13 11c1-2.5 3-4 5-4s4 1.5 5 4"/>
+                      <path d="M9 30c0-6 4-8 9-8s9 2 9 8"/>
+                    </svg>
+                  </div>
+                  <div class="comment-bubble">
+                    <div class="comment-meta-bar">
+                      <strong class="comment-author-id">{{ comment.author }}</strong>
+                      <span class="comment-time">{{ comment.time }}</span>
+                    </div>
+                    <p class="comment-text">{{ comment.content }}</p>
+                  </div>
+                </div>
+
+                <!-- Add Comment Input Box -->
+                <div class="add-comment-box">
+                  <input
+                    type="text"
+                    v-model="newCommentTexts[post.id]"
+                    placeholder="Write a comment..."
+                    class="comment-input-field"
+                    @keyup.enter="handlePostComment(post)"
+                  />
+                  <button
+                    type="button"
+                    class="comment-send-btn"
+                    :disabled="!newCommentTexts[post.id] || !newCommentTexts[post.id].trim()"
+                    @click="handlePostComment(post)"
+                  >
+                    Reply
+                  </button>
+                </div>
+              </div>
+            </article>
+
+            <!-- End of feed text (Matching Image 1) -->
+            <div class="community-end-notice">
+              That is everything in the community — 31 in all.
             </div>
 
-            <div class="rules-widget card">
-              <h3 class="widget-title">Community Code</h3>
-              <ul class="community-rules-list">
-                <li>Respect verified master track records and fair audits.</li>
-                <li>No spam or unsolicited trading bot promotion.</li>
-                <li>Share risk-management observations transparently.</li>
-              </ul>
+            <!-- Live reactions Box (Matching Image 1) -->
+            <div class="live-reactions-card card">
+              <div class="live-reactions-header">
+                <h3 class="reactions-title">Live reactions</h3>
+                <span class="reactions-sub">newest first</span>
+              </div>
+
+              <div class="live-reactions-list">
+                <div
+                  v-for="reaction in communityLiveReactions"
+                  :key="reaction.id"
+                  class="reaction-item-bubble"
+                >
+                  <div class="reaction-type-icon">
+                    <!-- Red Heart Icon -->
+                    <svg v-if="reaction.type === 'like'" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="hsl(352, 90%, 62%)" stroke="hsl(352, 90%, 62%)" stroke-width="1.5"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+                    <!-- Gold Money Sack Icon -->
+                    <svg v-else xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="hsl(44, 89%, 62%)" stroke="none"><path d="M12 2a4 4 0 0 0-3 1.34L7 6h10l-2-2.66A4 4 0 0 0 12 2zm-6 6c-1.1 0-2 .9-2 2v9a4 4 0 0 0 4 4h8a4 4 0 0 0 4-4v-9a2 2 0 0 0-2-2H6zm6 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3z"/></svg>
+                  </div>
+                  <div class="reaction-text-line">
+                    <strong class="reaction-user">{{ reaction.user }}</strong>
+                    <span class="reaction-msg">{{ reaction.text }}</span>
+                  </div>
+                  <div class="reaction-time-badge">{{ reaction.time }}</div>
+                </div>
+              </div>
             </div>
-          </div>
+          </main>
         </div>
       </section>
     </div>
@@ -1320,17 +1593,39 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted, onUnmounted, nextTick } from 'vue';
+import { ref, computed, watch, onMounted, onUnmounted, nextTick } from 'vue';
+import { useRoute, useRouter } from 'vue-router';
 import { useTradingStore } from '../stores/tradingStore';
 import CustomInput from '../components/CustomInput.vue';
 import CustomModal from '../components/CustomModal.vue';
 import GlobalToast from '../components/GlobalToast.vue';
 import { sanitizeName } from '../utils/validators';
 
+const route = useRoute();
+const router = useRouter();
 const tradingStore = useTradingStore();
 
 // --- SUB-NAV TABS ---
-const activeTab = ref('leaderboard');
+const activeTab = ref(
+  route?.query?.tab && ['leaderboard', 'masters', 'my_copies', 'become_master', 'community'].includes(route.query.tab)
+    ? String(route.query.tab)
+    : 'leaderboard'
+);
+
+watch(
+  () => route?.query?.tab,
+  (newTab) => {
+    if (newTab && ['leaderboard', 'masters', 'my_copies', 'become_master', 'community'].includes(newTab)) {
+      activeTab.value = String(newTab);
+    }
+  }
+);
+
+watch(activeTab, (tab) => {
+  if (route && router && route.query?.tab !== tab) {
+    router.replace({ query: { ...route.query, tab } }).catch(() => {});
+  }
+});
 const navigationTabs = [
   {
     id: 'leaderboard',
@@ -1603,36 +1898,166 @@ const submitMasterApplication = () => {
   }, 1200);
 };
 
-// --- COMMUNITY POSTS ---
-const communityPosts = [
-  {
-    id: 1,
-    author: '22****6121 (Champion #1)',
-    time: '25m ago',
-    tag: 'Execution Insights',
-    content: 'Mirrored Alex Warren on the BTC break above 66k. Proportional auto-execution locked in +$3,215 with zero slippage. Best risk-adjusted return this quarter.',
-    likes: 42,
-    replies: 11,
-  },
-  {
-    id: 2,
-    author: '23****4497 (Rank #4)',
-    time: '1h ago',
-    tag: 'Macro FX',
-    content: 'Oil & Majors is holding tight ranges on WTI crude during inventory releases. Drawdown remained well below 3.5%. Solid institutional discipline.',
-    likes: 29,
-    replies: 6,
-  },
-  {
-    id: 3,
-    author: '23****7741 (Rank #2)',
-    time: '3h ago',
-    tag: 'Conquest Mission',
-    content: 'Just crossed 5.4 lots volume on my Crypto Swing mirror! Ticket minted for the Rolls-Royce Cullinan draw. Who else is aiming for the 9 lot SF90 mission?',
-    likes: 58,
-    replies: 19,
-  },
+// --- COMMUNITY TAB STATE & DATA (Matching User Screenshots) ---
+const trendingTopics = [
+  { id: 'btcusd', label: 'BTCUSD', posts: 33, type: 'sentiment', bullish: 60, bearish: 40 },
+  { id: 'eurusd', label: 'EURUSD', posts: 14, type: 'sentiment', bullish: 8, bearish: 92 },
+  { id: 'tag_eurusd_bias', label: '# EURUSD bias', posts: 13, type: 'tag' },
+  { id: 'trader_alex_warren', label: 'Alex Warren', posts: 12, type: 'trader', avatarType: 'male_suit' },
+  { id: 'tag_drawdown_stops', label: '# Drawdown stops', posts: 11, type: 'tag' },
+  { id: 'xauusd', label: 'XAUUSD', posts: 8, type: 'symbol' },
+  { id: 'channel_xauusd_daily', label: 'XAUUSD daily trades', posts: 6, type: 'channel', avatarType: 'female_blazer' },
+  { id: 'trxusd', label: 'TRXUSD', posts: 2, type: 'sentiment', bullish: 45, bearish: 55 },
 ];
+
+const activeCommunityFilter = ref(null);
+
+const toggleCommunityFilter = (label) => {
+  if (activeCommunityFilter.value === label) {
+    activeCommunityFilter.value = null;
+  } else {
+    activeCommunityFilter.value = label;
+  }
+};
+
+const communityFeed = ref([
+  {
+    id: 'post_1',
+    userId: '22****0020',
+    avatarType: 'male_glasses',
+    status: 'Closed in profit',
+    time: 'yesterday',
+    content: 'Gold is performing mad',
+    direction: 'Long',
+    lots: null,
+    symbol: 'XAUUSD',
+    profit: null,
+    master: null,
+    hasPositionDetails: true,
+    isDetailsOpen: false,
+    positionDetails: {
+      symbol: 'XAUUSD',
+      direction: 'Long',
+      entryPrice: '2,642.50',
+      stopLoss: '2,635.00',
+      takeProfit: '2,668.20',
+      exitPrice: '2,668.20',
+      opened: '16 Oct, 09:14 AM',
+      closed: '17 Oct, 04:30 PM',
+      held: '1 d 7 h',
+      riskToReward: '1 : 3.42',
+      result: '+$312.40',
+    },
+    isLiked: false,
+    likes: 0,
+    isCommentsOpen: false,
+    comments: [],
+  },
+  {
+    id: 'post_2',
+    userId: '23****2449',
+    avatarType: 'curls_tshirt',
+    status: 'Closed in profit',
+    time: '1 min',
+    content: 'Copied trade on BTCUSD closed in profit, copying Crypto Swing.',
+    direction: 'Short',
+    lots: '0.10',
+    symbol: 'BTCUSD',
+    profit: 41.93,
+    master: 'Crypto Swing',
+    hasPositionDetails: false,
+    isDetailsOpen: false,
+    positionDetails: null,
+    isLiked: true,
+    likes: 1,
+    isCommentsOpen: false,
+    comments: [],
+  },
+  {
+    id: 'post_3',
+    userId: '23****8191',
+    avatarType: 'hat_jacket',
+    status: 'Closed in profit',
+    time: '15 min',
+    content: 'Copied trade on BTCUSD closed in profit, copying Aggressive Multi.',
+    direction: 'Long',
+    lots: '0.01',
+    symbol: 'BTCUSD',
+    profit: 1.23,
+    master: 'Aggressive Multi',
+    hasPositionDetails: true,
+    isDetailsOpen: true,
+    positionDetails: {
+      symbol: 'BTCUSD',
+      direction: 'Long',
+      entryPrice: '81,475.76',
+      stopLoss: '81,367.58',
+      takeProfit: '81,638.03',
+      exitPrice: '81,638.03',
+      opened: '17 Oct, 11:15 PM',
+      closed: '18 Oct, 02:06 AM',
+      held: '2 h 51 min',
+      riskToReward: '1 : 1.50',
+      result: '+$1.23',
+    },
+    isLiked: false,
+    likes: 2,
+    isCommentsOpen: true,
+    comments: [
+      { id: 'comm_1', author: '23****4724', time: '9 min ago', content: 'Smooth close.' },
+      { id: 'comm_2', author: '23****4863', time: '8 min ago', content: 'Steady work.' },
+    ],
+  },
+]);
+
+const filteredCommunityPosts = computed(() => {
+  if (!activeCommunityFilter.value) {
+    return communityFeed.value;
+  }
+  const cleanFilter = activeCommunityFilter.value.toLowerCase().replace('#', '').trim();
+  return communityFeed.value.filter((post) => {
+    const symbolMatch = post.symbol && post.symbol.toLowerCase().includes(cleanFilter);
+    const contentMatch = post.content && post.content.toLowerCase().includes(cleanFilter);
+    const masterMatch = post.master && post.master.toLowerCase().includes(cleanFilter);
+    return symbolMatch || contentMatch || masterMatch;
+  });
+});
+
+const handleLikePost = (post) => {
+  if (post.isLiked) {
+    post.isLiked = false;
+    post.likes = Math.max(0, post.likes - 1);
+  } else {
+    post.isLiked = true;
+    post.likes += 1;
+  }
+};
+
+const newCommentTexts = ref({});
+
+const handlePostComment = (post) => {
+  const text = (newCommentTexts.value[post.id] || '').trim();
+  if (!text) return;
+  post.comments.push({
+    id: 'comm_' + Date.now(),
+    author: '23****9988',
+    time: 'Just now',
+    content: text,
+  });
+  newCommentTexts.value[post.id] = '';
+  post.isCommentsOpen = true;
+  showToast('Comment posted to community thread.', 'success');
+};
+
+const communityLiveReactions = ref([
+  { id: 'r1', type: 'like', user: '23****4205', text: 'liked 2 posts on BTCUSD', time: '1 min' },
+  { id: 'r2', type: 'profit', user: '23****2449', text: 'closed a copied trade in profit on BTCUSD', time: '2 min' },
+  { id: 'r3', type: 'like', user: '23****0715', text: 'liked 4 posts on BTCUSD', time: '2 min' },
+  { id: 'r4', type: 'like', user: '23****5392', text: 'liked a post on BTCUSD', time: '3 min' },
+  { id: 'r5', type: 'profit', user: '23****0700', text: 'closed a copied trade in profit on BTCUSD', time: '5 min' },
+  { id: 'r6', type: 'like', user: '23****3077', text: 'liked a post on BTCUSD', time: '5 min' },
+  { id: 'r7', type: 'like', user: '23****7274', text: 'liked 2 posts on BTCUSD', time: '6 min' },
+]);
 
 // Formatting utilities
 const formatCurrency = (val) => {
@@ -3816,129 +4241,686 @@ onUnmounted(() => {
 }
 
 /* ===================================================================
-   TAB 5: COMMUNITY STYLES
+   TAB 5: COMMUNITY STYLES (Matching User Screenshots & Brand Palette)
    =================================================================== */
-.community-grid {
+.community-main-heading {
+  font-family: var(--font-family-heading);
+  font-size: 2.2rem;
+  font-weight: 700;
+  color: hsl(0, 0%, 100%);
+  margin: 0 0 24px 0;
+  letter-spacing: -0.02em;
+}
+
+.community-two-column-layout {
   display: grid;
-  grid-template-columns: 2fr 1.1fr;
-  gap: 24px;
+  grid-template-columns: 310px 1fr;
+  gap: 26px;
+  align-items: start;
 }
 
-.community-posts-column {
+@media (max-width: 960px) {
+  .community-two-column-layout {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* --- Left Column: Trending Sidebar --- */
+.community-trending-sidebar {
+  background-color: var(--color-surface-700);
+  border: 1px solid var(--color-surface-500);
+  border-radius: 14px;
+  padding: 22px 18px;
+  position: sticky;
+  top: 90px;
+}
+
+.trending-header {
   display: flex;
-  flex-direction: column;
-  gap: 16px;
+  align-items: baseline;
+  gap: 8px;
+  margin-bottom: 16px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--color-surface-500);
 }
 
-.community-post-card {
-  padding: 20px;
+.trending-title {
+  font-family: var(--font-family-heading);
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: hsl(0, 0%, 100%);
 }
 
-.post-header {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  margin-bottom: 12px;
-}
-
-.post-author-avatar {
-  width: 36px;
-  height: 36px;
-  border-radius: 50%;
-  background-color: var(--color-surface-400);
-  border: 1px solid var(--color-gold-500);
-  color: var(--color-gold-500);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.post-author-meta {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-}
-
-.post-author-name {
-  color: var(--color-grey-100);
-  font-size: 0.95rem;
-}
-
-.post-timestamp {
+.trending-subtitle {
   font-size: 0.78rem;
   color: var(--color-grey-400);
 }
 
-.post-body-text {
-  font-size: 0.92rem;
+.trending-list {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.trending-item-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 9px 12px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  user-select: none;
+}
+
+.trending-item-row:hover {
+  background-color: var(--color-surface-600);
+}
+
+.trending-item-row.is-active-filter {
+  background-color: var(--color-surface-500);
+  border-left: 3px solid var(--color-gold-500);
+}
+
+.trending-left-meta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+
+.trending-avatar-circle {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background-color: hsl(0, 0%, 96%);
+  color: hsl(0, 0%, 12%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.trending-label {
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: hsl(0, 0%, 95%);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.trending-label.tag-hash {
   color: var(--color-grey-200);
-  line-height: 1.5;
+  font-weight: 500;
+}
+
+.mini-sentiment-bar {
+  display: flex;
+  width: 50px;
+  height: 5px;
+  border-radius: 3px;
+  overflow: hidden;
+  flex-shrink: 0;
+  margin-left: 4px;
+}
+
+.sentiment-bar-green {
+  background-color: hsl(142, 70%, 45%);
+  height: 100%;
+}
+
+.sentiment-bar-red {
+  background-color: hsl(352, 90%, 55%);
+  height: 100%;
+}
+
+.trending-right-count {
+  display: flex;
+  align-items: baseline;
+  gap: 4px;
+  flex-shrink: 0;
+  margin-left: 10px;
+}
+
+.count-num {
+  font-size: 0.92rem;
+  font-weight: 700;
+}
+
+.count-lbl {
+  font-size: 0.74rem;
+  color: var(--color-grey-400);
+}
+
+/* --- Right Column: Community Feed --- */
+.community-feed-column {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.filter-status-banner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 16px;
+  margin-bottom: 16px;
+  background-color: var(--color-surface-600);
+  border: 1px solid var(--color-gold-alpha-30);
+  border-radius: 10px;
+  color: var(--color-grey-200);
+  font-size: 0.88rem;
+}
+
+.filter-status-banner strong {
+  color: var(--color-gold-500);
+}
+
+.clear-filter-btn {
+  background: none;
+  border: none;
+  color: var(--color-gold-400);
+  font-size: 0.82rem;
+  cursor: pointer;
+  padding: 2px 6px;
+}
+
+.clear-filter-btn:hover {
+  color: hsl(0, 0%, 100%);
+}
+
+.community-post-item {
+  background-color: var(--color-surface-700);
+  border: 1px solid var(--color-surface-500);
+  border-radius: 14px;
+  padding: 22px 26px;
+  margin-bottom: 18px;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+/* Featured / Active Highlighted Post (as shown in Screenshots 2 & 3) */
+.community-post-item.is-featured-post {
+  border: 1.5px solid var(--color-gold-500);
+  box-shadow: 0 0 20px var(--color-gold-alpha-15);
+}
+
+.post-item-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
   margin-bottom: 14px;
 }
 
-.post-footer {
+.post-user-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.post-user-avatar-circle {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: hsl(0, 0%, 96%);
+  color: hsl(0, 0%, 12%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.post-masked-user {
+  font-family: var(--font-family-heading);
+  font-size: 0.96rem;
+  font-weight: 700;
+  color: hsl(0, 0%, 100%);
+}
+
+.post-status-right {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.badge-closed-profit {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: hsl(142, 70%, 45%);
+}
+
+.post-time-meta {
+  font-size: 0.8rem;
+  color: var(--color-grey-400);
+}
+
+.post-message-body {
+  font-size: 0.96rem;
+  color: hsl(0, 0%, 94%);
+  line-height: 1.55;
+  margin: 0 0 16px 0;
+}
+
+.post-trade-meta-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 14px;
+}
+
+.trade-pills-left {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.direction-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+
+.direction-pill.pill-long {
+  background-color: hsl(142, 70%, 12%);
+  color: hsl(142, 75%, 52%);
+  border: 1px solid hsl(142, 70%, 25%);
+}
+
+.direction-pill.pill-short {
+  background-color: hsl(352, 70%, 12%);
+  color: hsl(352, 85%, 65%);
+  border: 1px solid hsl(352, 70%, 25%);
+}
+
+.dir-arrow {
+  font-size: 0.75rem;
+}
+
+.lots-pill,
+.symbol-pill {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-size: 0.8rem;
+  background-color: var(--color-surface-500);
+  color: var(--color-grey-100);
+  border: 1px solid var(--color-surface-400);
+}
+
+.symbol-pill {
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+
+.trade-profit-highlight {
+  font-family: var(--font-family-heading);
+  font-size: 1.28rem;
+  font-weight: 800;
+  letter-spacing: -0.01em;
+}
+
+/* Expandable Position Details Drawer */
+.position-details-container {
+  margin: 10px 0 14px 0;
+}
+
+.position-details-toggle {
+  background: none;
+  border: none;
+  color: var(--color-grey-300);
+  font-size: 0.85rem;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 0;
+  transition: color 0.2s ease;
+}
+
+.position-details-toggle:hover {
+  color: var(--color-gold-400);
+}
+
+.toggle-icon {
+  font-size: 0.82rem;
+  line-height: 1;
+}
+
+.position-details-grid-card {
+  margin-top: 10px;
+  padding: 16px 20px;
+  background-color: var(--color-surface-800);
+  border: 1px solid var(--color-surface-500);
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.details-grid-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+
+@media (max-width: 600px) {
+  .details-grid-row {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.grid-cell {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.cell-label {
+  font-size: 0.76rem;
+  color: var(--color-grey-400);
+  text-transform: capitalize;
+}
+
+.cell-val {
+  font-size: 0.9rem;
+  color: hsl(0, 0%, 98%);
+  font-weight: 600;
+}
+
+/* Post Action Footer */
+.post-item-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 14px;
+  border-top: 1px solid var(--color-surface-500);
+  margin-top: 6px;
+}
+
+.footer-reactions-left {
   display: flex;
   align-items: center;
   gap: 20px;
-  font-size: 0.82rem;
-  color: var(--color-grey-400);
-  border-top: 1px solid var(--color-gold-alpha-08);
-  padding-top: 10px;
 }
 
-.post-stat-item {
-  display: flex;
+.post-reaction-btn {
+  background: none;
+  border: none;
+  color: var(--color-grey-300);
+  cursor: pointer;
+  display: inline-flex;
   align-items: center;
   gap: 6px;
-}
-
-.community-sidebar-column {
-  display: flex;
-  flex-direction: column;
-  gap: 18px;
-}
-
-.widget-title {
-  font-size: 1.15rem;
-  color: var(--color-gold-500);
-  margin-bottom: 6px;
-}
-
-.widget-desc {
   font-size: 0.85rem;
-  color: var(--color-grey-300);
-  margin-bottom: 16px;
-}
-
-.sentiment-meter-bar {
-  display: flex;
-  height: 12px;
+  font-weight: 600;
+  padding: 4px 6px;
   border-radius: 6px;
-  overflow: hidden;
-  margin-bottom: 10px;
+  transition: all 0.2s ease;
 }
 
-.segment-bullish {
-  background-color: var(--color-success-500);
+.post-reaction-btn:hover {
+  color: var(--color-gold-400);
+  background-color: var(--color-surface-600);
 }
 
-.segment-bearish {
-  background-color: var(--color-error-500);
+.post-reaction-btn.is-liked {
+  color: hsl(352, 90%, 62%);
 }
 
-.sentiment-labels-row {
+.footer-actions-right {
   display: flex;
-  justify-content: space-between;
-  font-size: 0.85rem;
+  align-items: center;
+  gap: 14px;
 }
 
-.community-rules-list {
-  padding-left: 20px;
+.btn-text-open {
+  background: none;
+  border: none;
+  color: var(--color-grey-200);
+  font-size: 0.88rem;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 6px 10px;
+  transition: color 0.2s ease;
+}
+
+.btn-text-open:hover {
+  color: var(--color-gold-400);
+}
+
+.btn-copy-gold-pill {
+  background-color: var(--color-gold-500);
+  color: hsl(0, 0%, 10%);
+  font-family: var(--font-family-body);
+  font-size: 0.86rem;
+  font-weight: 700;
+  padding: 6px 20px;
+  border-radius: 20px;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 6px var(--color-gold-alpha-20);
+}
+
+.btn-copy-gold-pill:hover {
+  background-color: var(--color-gold-400);
+  box-shadow: 0 4px 12px var(--color-gold-alpha-40);
+  transform: translateY(-1px);
+}
+
+/* Threaded Comments */
+.post-comments-thread {
+  margin-top: 16px;
+  padding: 16px 18px;
+  background-color: var(--color-surface-800);
+  border: 1px solid var(--color-surface-500);
+  border-radius: 10px;
   display: flex;
   flex-direction: column;
+  gap: 12px;
+}
+
+.comment-entry-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+}
+
+.comment-avatar-circle {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background-color: hsl(0, 0%, 96%);
+  color: hsl(0, 0%, 12%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.comment-bubble {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.comment-meta-bar {
+  display: flex;
+  align-items: baseline;
   gap: 8px;
+}
+
+.comment-author-id {
+  font-size: 0.84rem;
+  font-weight: 700;
+  color: hsl(0, 0%, 98%);
+}
+
+.comment-time {
+  font-size: 0.74rem;
+  color: var(--color-grey-400);
+}
+
+.comment-text {
   font-size: 0.88rem;
+  color: var(--color-grey-200);
+  margin: 0;
+  line-height: 1.45;
+}
+
+.add-comment-box {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 8px;
+  padding-top: 10px;
+  border-top: 1px solid var(--color-surface-600);
+}
+
+.comment-input-field {
+  flex: 1;
+  padding: 8px 14px;
+  background-color: var(--color-surface-600);
+  border: 1px solid var(--color-surface-400);
+  border-radius: 20px;
+  color: hsl(0, 0%, 100%);
+  font-family: var(--font-family-body);
+  font-size: 0.84rem;
+}
+
+.comment-input-field:focus {
+  outline: none;
+  border-color: var(--color-gold-500);
+  box-shadow: 0 0 0 2px var(--color-gold-alpha-15);
+}
+
+.comment-send-btn {
+  padding: 7px 16px;
+  background-color: var(--color-gold-500);
+  color: hsl(0, 0%, 10%);
+  border: none;
+  border-radius: 20px;
+  font-size: 0.82rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.comment-send-btn:hover:not(:disabled) {
+  background-color: var(--color-gold-400);
+}
+
+.comment-send-btn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+/* End of feed notice (Matching Image 1) */
+.community-end-notice {
+  text-align: center;
+  color: var(--color-grey-400);
+  font-size: 0.86rem;
+  padding: 24px 0 18px 0;
+  font-weight: 500;
+}
+
+/* Live reactions Card (Matching Image 1) */
+.live-reactions-card {
+  background-color: var(--color-surface-700);
+  border: 1px solid var(--color-surface-500);
+  border-radius: 14px;
+  padding: 22px 24px;
+  margin-top: 8px;
+}
+
+.live-reactions-header {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  margin-bottom: 16px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--color-surface-500);
+}
+
+.reactions-title {
+  font-family: var(--font-family-heading);
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: hsl(0, 0%, 100%);
+  margin: 0;
+}
+
+.reactions-sub {
+  font-size: 0.8rem;
+  color: var(--color-grey-400);
+}
+
+.live-reactions-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.reaction-item-bubble {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  padding: 12px 18px;
+  background-color: var(--color-surface-600);
+  border: 1px solid var(--color-surface-400);
+  border-radius: 10px;
+  transition: background-color 0.2s ease;
+}
+
+.reaction-item-bubble:hover {
+  background-color: var(--color-surface-500);
+}
+
+.reaction-type-icon {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background-color: var(--color-surface-500);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.reaction-text-line {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  flex: 1;
+  min-width: 0;
+}
+
+.reaction-user {
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: hsl(0, 0%, 100%);
+}
+
+.reaction-msg {
+  font-size: 0.84rem;
   color: var(--color-grey-300);
+}
+
+.reaction-time-badge {
+  font-size: 0.78rem;
+  color: var(--color-grey-400);
+  flex-shrink: 0;
 }
 
 /* ===================================================================
