@@ -1,42 +1,40 @@
 <template>
   <Teleport to="body">
-    <Transition name="modal-fade">
-      <div v-if="isOpen" class="modal-backdrop" @click.self="handleBackdropClick">
-        <div class="modal-container" :class="[typeClass]" role="dialog" aria-modal="true">
-          <!-- Modal Header -->
-          <div class="modal-header">
-            <div class="modal-title-group">
-              <div class="icon-circle icon-circle-sm" :class="[iconClass]">
-                <svg v-if="type === 'danger'" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
-                <svg v-else-if="type === 'success'" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
-                <svg v-else xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
-              </div>
-              <h3 class="modal-title">{{ title }}</h3>
+    <!-- Show immediately without popup animation -->
+    <div v-if="isOpen" class="modal-backdrop" @click.self="handleBackdropClick">
+      <div class="modal-container" :class="[typeClass]" role="dialog" aria-modal="true">
+        <!-- Modal Header -->
+        <div class="modal-header">
+          <div class="modal-title-group">
+            <div class="icon-circle icon-circle-sm" :class="[iconClass]">
+              <svg v-if="type === 'danger'" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+              <svg v-else-if="type === 'success'" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+              <svg v-else xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
             </div>
-            <button class="modal-close-btn icon-link" @click="close">
-              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-            </button>
+            <h3 class="modal-title">{{ title }}</h3>
           </div>
+          <button class="modal-close-btn icon-link" @click="close" aria-label="Close dialog">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+          </button>
+        </div>
 
-          <!-- Modal Body -->
-          <div class="modal-body">
-            <slot>
-              <p>{{ message }}</p>
-            </slot>
-          </div>
+        <!-- Modal Body -->
+        <div class="modal-body">
+          <slot>
+            <p>{{ message }}</p>
+          </slot>
+        </div>
 
-          <!-- Modal Actions -->
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" @click="close">
-              {{ cancelText }}
-            </button>
+        <!-- Modal Actions (No Cancel buttons allowed in forms/cards) -->
+        <div class="modal-footer" v-if="showFooter">
+          <slot name="footer">
             <button type="button" class="btn" :class="[confirmBtnClass]" @click="confirm">
               {{ confirmText }}
             </button>
-          </div>
+          </slot>
         </div>
       </div>
-    </Transition>
+    </div>
   </Teleport>
 </template>
 
@@ -45,11 +43,11 @@ import { computed } from 'vue';
 
 const props = defineProps({
   isOpen: { type: Boolean, default: false },
-  title: { type: String, default: 'Confirmation' },
+  title: { type: String, default: 'Notification' },
   message: { type: String, default: '' },
   type: { type: String, default: 'primary' }, // primary, danger, success, warning
   confirmText: { type: String, default: 'Confirm' },
-  cancelText: { type: String, default: 'Cancel' },
+  showFooter: { type: Boolean, default: true },
   closeOnBackdrop: { type: Boolean, default: true },
 });
 
@@ -85,7 +83,7 @@ const confirmBtnClass = computed(() => {
   left: 0;
   width: 100vw;
   height: 100vh;
-  background-color: rgba(0, 0, 0, 0.75);
+  background-color: hsl(0 0% 0% / 0.8);
   backdrop-filter: blur(4px);
   display: flex;
   align-items: center;
@@ -99,7 +97,7 @@ const confirmBtnClass = computed(() => {
   border: 1px solid var(--color-gold-800);
   border-radius: 12px;
   width: 100%;
-  max-width: 500px;
+  max-width: 540px;
   box-shadow: var(--elevation-5);
   overflow: hidden;
   display: flex;
@@ -111,7 +109,7 @@ const confirmBtnClass = computed(() => {
   align-items: center;
   justify-content: space-between;
   padding: 16px 20px;
-  border-bottom: 1px solid rgba(229, 181, 103, 0.15);
+  border-bottom: 1px solid var(--color-gold-alpha-15);
 }
 
 .modal-title-group {
@@ -149,7 +147,7 @@ const confirmBtnClass = computed(() => {
   gap: 12px;
   padding: 16px 20px;
   background-color: var(--color-surface-600);
-  border-top: 1px solid rgba(229, 181, 103, 0.1);
+  border-top: 1px solid var(--color-gold-alpha-15);
 }
 
 .btn {
@@ -180,7 +178,7 @@ const confirmBtnClass = computed(() => {
 
 .btn-danger {
   background-color: var(--color-error-500);
-  color: #ffffff;
+  color: hsl(0, 0%, 100%);
 }
 
 .btn-danger:hover {
@@ -189,20 +187,10 @@ const confirmBtnClass = computed(() => {
 
 .btn-success {
   background-color: var(--color-success-500);
-  color: #ffffff;
+  color: hsl(0, 0%, 100%);
 }
 
 .btn-success:hover {
   background-color: var(--color-success-400);
-}
-
-.modal-fade-enter-active,
-.modal-fade-leave-active {
-  transition: opacity 0.3s ease;
-}
-
-.modal-fade-enter-from,
-.modal-fade-leave-to {
-  opacity: 0;
 }
 </style>

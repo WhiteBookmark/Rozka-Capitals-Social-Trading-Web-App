@@ -1,4 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router';
+import CopyTradeView from '../views/CopyTradeView.vue';
 import HomeView from '../views/HomeView.vue';
 import LoginView from '../views/LoginView.vue';
 import RegisterView from '../views/RegisterView.vue';
@@ -7,7 +8,10 @@ import InvestorView from '../views/InvestorView.vue';
 import MasterTraderView from '../views/MasterTraderView.vue';
 
 const routes = [
-  { path: '/', name: 'Home', component: HomeView, meta: { title: 'Home - Rozka Capitals Social Trading' } },
+  { path: '/', name: 'CopyTradeDefault', component: CopyTradeView, meta: { title: 'Copy Trade Leaderboard - Rozka Capitals' } },
+  { path: '/copy-trade', name: 'CopyTrade', component: CopyTradeView, meta: { title: 'Copy Trade Leaderboard - Rozka Capitals' } },
+  { path: '/copytrade', redirect: '/' },
+  { path: '/home', name: 'Home', component: HomeView, meta: { title: 'Home - Rozka Capitals Social Trading' } },
   { path: '/login', name: 'Login', component: LoginView, meta: { title: 'Login - Rozka Capitals Social Trading' } },
   { path: '/register', name: 'Register', component: RegisterView, meta: { title: 'Register - Rozka Capitals Social Trading' } },
   { path: '/dashboard', name: 'Dashboard', component: DashboardView, meta: { title: 'Dashboard - Rozka Capitals Social Trading' } },

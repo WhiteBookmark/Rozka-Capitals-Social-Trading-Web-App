@@ -12,6 +12,7 @@
 
       <!-- Desktop Navigation Links -->
       <nav class="desktop-nav">
+        <router-link to="/" class="nav-link">Copy Trade</router-link>
         <router-link to="/dashboard" class="nav-link">Social Dashboard</router-link>
         <router-link to="/investor" class="nav-link">Investor Center</router-link>
         <router-link to="/master-trader" class="nav-link">Master Portal</router-link>
@@ -51,6 +52,7 @@
     <!-- Mobile Drawer Menu -->
     <Transition name="drawer">
       <div v-if="isMobileMenuOpen" class="mobile-nav-drawer">
+        <router-link to="/" class="mobile-nav-link" @click="isMobileMenuOpen = false">Copy Trade</router-link>
         <router-link to="/dashboard" class="mobile-nav-link" @click="isMobileMenuOpen = false">Social Dashboard</router-link>
         <router-link to="/investor" class="mobile-nav-link" @click="isMobileMenuOpen = false">Investor Center</router-link>
         <router-link to="/master-trader" class="mobile-nav-link" @click="isMobileMenuOpen = false">Master Portal</router-link>

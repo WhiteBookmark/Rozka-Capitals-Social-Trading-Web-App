@@ -25,6 +25,7 @@
         :step="step"
         :maxlength="maxlength"
         :disabled="disabled"
+        :autofocus="autofocus"
         :autocomplete="autocomplete"
         @input="handleInput"
         @blur="$emit('blur', $event)"
@@ -69,6 +70,7 @@ const props = defineProps({
   placeholder: { type: String, default: '' },
   required: { type: Boolean, default: false },
   disabled: { type: Boolean, default: false },
+  autofocus: { type: Boolean, default: false },
   error: { type: String, default: '' },
   icon: { type: String, default: '' },
   min: { type: [String, Number], default: undefined },
@@ -147,10 +149,10 @@ const handleInput = (event) => {
   width: 100%;
   height: 48px;
   padding: 0 16px;
-  background-color: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(243, 198, 73, 0.25);
+  background-color: hsl(0 0% 100% / 0.05);
+  border: 1px solid var(--color-gold-alpha-30);
   border-radius: 8px;
-  color: #ffffff;
+  color: hsl(0, 0%, 100%);
   font-size: 1rem;
   transition: border-color 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease;
 }
@@ -166,12 +168,12 @@ const handleInput = (event) => {
 .custom-input-field:focus {
   outline: none;
   border-color: var(--color-gold-500);
-  background-color: rgba(243, 198, 73, 0.08);
-  box-shadow: 0 0 0 3px rgba(243, 198, 73, 0.15);
+  background-color: var(--color-gold-alpha-08);
+  box-shadow: 0 0 0 3px var(--color-gold-alpha-15);
 }
 
 .custom-input-field::placeholder {
-  color: rgba(255, 255, 255, 0.4);
+  color: hsl(0 0% 100% / 0.4);
 }
 
 .has-error .custom-input-field {

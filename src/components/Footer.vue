@@ -37,6 +37,7 @@
         <div class="footer-col">
           <h4 class="footer-col-title">Client Workspace</h4>
           <ul class="footer-links-list">
+            <li><router-link to="/">Copy Trade Leaderboard</router-link></li>
             <li><router-link to="/dashboard">Social Dashboard</router-link></li>
             <li><router-link to="/investor">Investor Center</router-link></li>
             <li><router-link to="/master-trader">Master Portal</router-link></li>
