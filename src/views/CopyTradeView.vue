@@ -504,70 +504,274 @@
       </section>
 
       <!-- ===================================================================
-           TAB 2: COPY MASTERS DIRECTORY
+           TAB 2: COPY MASTERS DIRECTORY (Matching user screenshots)
            =================================================================== -->
       <section v-else-if="activeTab === 'masters'" class="tab-content-section" aria-labelledby="masters-heading">
-        <div class="section-title-bar">
-          <h2 id="masters-heading" class="section-title">Institutional Master Traders</h2>
-          <p class="section-subtitle">
-            Audited strategies with verified track records, institutional risk management, and automatic proportional execution.
+        <!-- Top Hero Banner Card -->
+        <div class="copy-masters-banner card">
+          <h2 id="masters-heading" class="copy-masters-banner-title">Copy Masters</h2>
+          <p class="copy-masters-banner-desc">
+            New to trading? Copy an experienced master and learn as you go. Their trades open on your account automatically, while you keep full control and can adjust or stop at any time. Pick a master you like and start copying in minutes.
           </p>
         </div>
 
-        <div class="masters-catalog-grid">
-          <div
-            v-for="master in tradingStore.masterTraders"
-            :key="master.id"
-            class="master-catalog-card card"
-          >
-            <div class="catalog-card-header">
-              <img :src="master.avatar" :alt="master.name" class="catalog-avatar" />
-              <div class="catalog-meta">
-                <h3 class="catalog-name">{{ master.name }}</h3>
-                <span class="catalog-strategy-title">{{ master.title }}</span>
-              </div>
-              <span v-if="master.isCopied" class="badge badge-success">Copied</span>
-            </div>
+        <!-- Search & Sort Filter Bar -->
+        <div class="masters-search-sort-bar">
+          <!-- Search input with inside left icon -->
+          <div class="search-input-box masters-search-box">
+            <span class="search-icon-inside">
+              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            </span>
+            <input
+              type="text"
+              v-model="searchMastersQuery"
+              placeholder="Search masters or their strategy"
+              class="table-search-field"
+              aria-label="Search masters or their strategy"
+            />
+          </div>
 
-            <p class="catalog-strategy-desc">{{ master.strategy }}</p>
-
-            <div class="catalog-stats-row">
-              <div class="mini-stat">
-                <span class="mini-stat-label">30D ROI</span>
-                <span class="mini-stat-value text-success">+{{ master.roi30d }}%</span>
-              </div>
-              <div class="mini-stat">
-                <span class="mini-stat-label">Win Rate</span>
-                <span class="mini-stat-value">{{ master.winRate }}%</span>
-              </div>
-              <div class="mini-stat">
-                <span class="mini-stat-label">Copiers</span>
-                <span class="mini-stat-value">{{ formatNumber(master.copiers) }}</span>
-              </div>
-              <div class="mini-stat">
-                <span class="mini-stat-label">Risk Tier</span>
-                <span class="mini-stat-value gold-highlight">{{ master.riskScore }}/5</span>
-              </div>
-            </div>
-
-            <div class="catalog-actions-footer">
+          <!-- Sort Combobox Dropdown (No animation popup per rules) -->
+          <div class="sort-combobox-wrapper" @click.stop>
+            <span class="sort-label-text">Sort By</span>
+            <div class="sort-dropdown-relative">
               <button
-                v-if="!master.isCopied"
                 type="button"
-                class="btn-primary-action full-width"
+                class="sort-dropdown-trigger"
+                :class="{ 'is-open': isSortDropdownOpen }"
+                @click="isSortDropdownOpen = !isSortDropdownOpen"
+                aria-haspopup="listbox"
+                :aria-expanded="isSortDropdownOpen"
+              >
+                <span>{{ activeSortOptionLabel }}</span>
+                <svg class="dropdown-chevron" :class="{ 'is-rotated': isSortDropdownOpen }" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+              </button>
+
+              <!-- Immediate Popup Dropdown Menu -->
+              <div v-if="isSortDropdownOpen" class="sort-dropdown-menu" role="listbox">
+                <button
+                  v-for="opt in sortOptions"
+                  :key="opt.id"
+                  type="button"
+                  class="sort-dropdown-item"
+                  :class="{ 'is-active': activeSortId === opt.id }"
+                  @click="selectSortOption(opt.id)"
+                  role="option"
+                  :aria-selected="activeSortId === opt.id"
+                >
+                  <span class="sort-item-label">{{ opt.label }}</span>
+                  <svg v-if="activeSortId === opt.id" class="check-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="hsl(156, 87%, 43%)" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Master Cards Grid (3 Columns Desktop, Responsive) -->
+        <div class="masters-grid">
+          <div
+            v-for="master in paginatedMasters"
+            :key="master.id"
+            class="master-card card"
+          >
+            <!-- Card Header: Avatar & Title Stack -->
+            <div class="master-card-header">
+              <div class="master-avatar-circle" :title="master.name">
+                <!-- Illustrated SVG Avatar on white circle -->
+                <svg v-if="master.avatarType === 'curls_tshirt'" viewBox="0 0 36 36" width="34" height="34" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M18 10c-3 0-5 2-5 4v1c0 2.5 2 4.5 5 4.5s5-2 5-4.5v-1c0-2-2-4-5-4z"/>
+                  <path d="M12 12c-1-1-2-1-3 0s-1 3 0 4"/>
+                  <path d="M24 12c1-1 2-1 3 0s1 3 0 4"/>
+                  <path d="M13 10c0-3 2.5-4 5-4s5 1 5 4"/>
+                  <path d="M9 30c0-6 4-8 9-8s9 2 9 8"/>
+                  <path d="M15 22v3c0 1.5 1.5 2.5 3 2.5s3-1 3-2.5v-3"/>
+                </svg>
+                <svg v-else-if="master.avatarType === 'polo_shirt'" viewBox="0 0 36 36" width="34" height="34" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M18 10c-3 0-4.5 1.8-4.5 4v1c0 2.5 2 4.5 4.5 4.5s4.5-2 4.5-4.5v-1c0-2.2-1.5-4-4.5-4z"/>
+                  <path d="M13 11c1-3 3-4 5-4s4 1 5 4"/>
+                  <path d="M9 30c0-6 4-8 9-8s9 2 9 8"/>
+                  <path d="M16 22l2 4 2-4"/>
+                </svg>
+                <svg v-else-if="master.avatarType === 'sunglasses'" viewBox="0 0 36 36" width="34" height="34" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M18 10c-3 0-4.5 2-4.5 4.5v1c0 2.5 2 4 4.5 4s4.5-1.5 4.5-4v-1c0-2.5-1.5-4.5-4.5-4.5z"/>
+                  <rect x="13.5" y="12.5" width="4" height="3" rx="1" fill="currentColor"/>
+                  <rect x="18.5" y="12.5" width="4" height="3" rx="1" fill="currentColor"/>
+                  <line x1="17.5" y1="14" x2="18.5" y2="14"/>
+                  <path d="M13 11c1-2.5 3-4 5-4s4 1.5 5 4"/>
+                  <path d="M9 30c0-6 4-8 9-8s9 2 9 8"/>
+                </svg>
+                <svg v-else-if="master.avatarType === 'hat_jacket'" viewBox="0 0 36 36" width="34" height="34" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M18 12c-2.5 0-4 1.8-4 4v1c0 2.2 1.8 3.8 4 3.8s4-1.6 4-3.8v-1c0-2.2-1.5-4-4-4z"/>
+                  <path d="M11 12c2-1 4.5-1.5 7-1.5s5 0.5 7 1.5"/>
+                  <path d="M13 12c0-3 2-5 5-5s5 2 5 5"/>
+                  <path d="M9 30c0-6 4-8 9-8s9 2 9 8"/>
+                  <path d="M15 22l3 3 3-3"/>
+                </svg>
+                <svg v-else-if="master.avatarType === 'female_curls'" viewBox="0 0 36 36" width="34" height="34" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M18 11c-2.5 0-4 1.8-4 4v1c0 2.2 1.8 3.8 4 3.8s4-1.6 4-3.8v-1c0-2.2-1.5-4-4-4z"/>
+                  <path d="M11 14c-1 2-1 5 1 7"/>
+                  <path d="M25 14c1 2 1 5-1 7"/>
+                  <path d="M12 11c1-3 3-4 6-4s5 1 6 4"/>
+                  <path d="M9 30c0-6 4-8 9-8s9 2 9 8"/>
+                </svg>
+                <svg v-else-if="master.avatarType === 'male_glasses'" viewBox="0 0 36 36" width="34" height="34" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M18 10c-3 0-4.5 1.8-4.5 4v1c0 2.5 2 4.5 4.5 4.5s4.5-2 4.5-4.5v-1c0-2.2-1.5-4-4.5-4z"/>
+                  <circle cx="15.5" cy="14" r="2"/>
+                  <circle cx="20.5" cy="14" r="2"/>
+                  <line x1="17.5" y1="14" x2="18.5" y2="14"/>
+                  <path d="M13 10c1-2.5 3-3.5 5-3.5s4 1 5 3.5"/>
+                  <path d="M9 30c0-6 4-8 9-8s9 2 9 8"/>
+                </svg>
+                <svg v-else-if="master.avatarType === 'female_blazer'" viewBox="0 0 36 36" width="34" height="34" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M18 10c-2.5 0-4 1.8-4 4v1c0 2.2 1.8 4 4 4s4-1.8 4-4v-1c0-2.2-1.5-4-4-4z"/>
+                  <path d="M12 11c1-2.5 3-3.5 6-3.5s5 1 6 3.5"/>
+                  <path d="M12 12c-1 3-1 6 0 8"/>
+                  <path d="M24 12c1 3 1 6 0 8"/>
+                  <path d="M9 30c0-6 4-8 9-8s9 2 9 8"/>
+                  <path d="M15 22l3 4 3-4"/>
+                </svg>
+                <svg v-else viewBox="0 0 36 36" width="34" height="34" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M18 10c-3 0-4 1.8-4 4v1c0 2.2 1.8 4 4 4s4-1.8 4-4v-1c0-2.2-1-4-4-4z"/>
+                  <path d="M13 11c1-2.5 2.8-3.5 5-3.5s4 1 5 3.5"/>
+                  <path d="M9 30c0-6 4-8 9-8s9 2 9 8"/>
+                  <path d="M15 22l3 5 3-5"/>
+                </svg>
+              </div>
+              <div class="master-title-stack">
+                <h3 class="master-name-text">{{ master.name }}</h3>
+                <p class="master-subtitle-text">{{ master.subtitle }}</p>
+              </div>
+            </div>
+
+            <!-- Prominent Smooth Equity Line Chart Spanning Card Width -->
+            <div class="master-equity-chart">
+              <svg class="master-chart-svg" viewBox="0 0 340 70" preserveAspectRatio="none">
+                <defs>
+                  <linearGradient :id="'masterChartGrad_' + master.id" x1="0%" y1="0%" x2="0%" y2="100%">
+                    <stop offset="0%" :stop-color="master.return90d >= 0 ? 'hsl(156, 87%, 43%)' : 'hsl(352, 90%, 62%)'" stop-opacity="0.25" />
+                    <stop offset="100%" :stop-color="master.return90d >= 0 ? 'hsl(156, 87%, 43%)' : 'hsl(352, 90%, 62%)'" stop-opacity="0.0" />
+                  </linearGradient>
+                </defs>
+                <polygon
+                  :points="generateMasterAreaPoints(master.equityTrend)"
+                  :fill="'url(#masterChartGrad_' + master.id + ')'"
+                />
+                <polyline
+                  :points="generateMasterLinePoints(master.equityTrend)"
+                  fill="none"
+                  :stroke="master.return90d >= 0 ? 'hsl(156, 87%, 43%)' : 'hsl(352, 90%, 62%)'"
+                  stroke-width="2.5"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+              </svg>
+            </div>
+
+            <!-- Two Rows of Key Metrics -->
+            <div class="master-metrics-block">
+              <!-- Row 1: Return 90D | Max Drawdown | Win Rate -->
+              <div class="metrics-row">
+                <div class="metric-col">
+                  <div class="metric-val" :class="master.return90d >= 0 ? 'text-success' : 'text-danger'">
+                    {{ master.return90d >= 0 ? '+' : '' }}{{ master.return90d }}%
+                  </div>
+                  <div class="metric-lbl">Return 90D</div>
+                </div>
+                <div class="metric-col">
+                  <div class="metric-val metric-white">
+                    {{ master.maxDrawdown }}%
+                  </div>
+                  <div class="metric-lbl">
+                    Max Drawdown
+                    <span class="info-icon" title="Max peak-to-trough decline">ⓘ</span>
+                  </div>
+                </div>
+                <div class="metric-col">
+                  <div class="metric-val metric-white">
+                    {{ master.winRate }}%
+                  </div>
+                  <div class="metric-lbl">Win Rate</div>
+                </div>
+              </div>
+
+              <!-- Row 2: Total Profit | Profit 30 Days | Track Record -->
+              <div class="metrics-row">
+                <div class="metric-col">
+                  <div class="metric-val" :class="master.totalProfit >= 0 ? 'text-success' : 'text-danger'">
+                    {{ master.totalProfit >= 0 ? '+' : '-' }}${{ formatCurrency(Math.abs(master.totalProfit)) }}
+                  </div>
+                  <div class="metric-lbl">Total Profit</div>
+                </div>
+                <div class="metric-col">
+                  <div class="metric-val" :class="master.profit30d >= 0 ? 'text-success' : 'text-danger'">
+                    {{ master.profit30d >= 0 ? '+' : '-' }}${{ formatCurrency(Math.abs(master.profit30d)) }}
+                  </div>
+                  <div class="metric-lbl">Profit, 30 Days</div>
+                </div>
+                <div class="metric-col">
+                  <div class="metric-val metric-white">
+                    {{ master.trackRecord }}
+                  </div>
+                  <div class="metric-lbl">Track Record</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Optional Special Footnote (As in Image 1 for Titan High Yield) -->
+            <div v-if="master.specialNote" class="master-special-note">
+              {{ master.specialNote }}
+            </div>
+
+            <!-- Card Footer: Copiers & Fee | Copy Master Button -->
+            <div class="master-card-footer">
+              <div class="master-copiers-fee">
+                <span>{{ master.copiers }} Copiers</span>
+                <span class="dot-sep">·</span>
+                <span>{{ master.fee }}% Fee</span>
+              </div>
+              <button
+                type="button"
+                class="btn-copy-master-pill"
                 @click="openCopyModalForTrader(master)"
               >
                 Copy Master
               </button>
-              <button
-                v-else
-                type="button"
-                class="btn-stop-copy full-width"
-                @click="handleStopCopying(master.id)"
-              >
-                Stop Copying
-              </button>
             </div>
+          </div>
+
+          <!-- Empty State -->
+          <div v-if="sortedMasters.length === 0" class="masters-empty-state card">
+            <svg xmlns="http://www.w3.org/2000/svg" width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            <p>No master traders found matching "{{ searchMastersQuery }}"</p>
+          </div>
+        </div>
+
+        <!-- Bottom Pagination Controls (Matching Image 1: "1–12 of 19 masters") -->
+        <div class="masters-pagination-row">
+          <div class="masters-count-status">
+            {{ mastersPaginationText }}
+          </div>
+
+          <div class="pagination-controls">
+            <button
+              type="button"
+              class="pagination-btn"
+              :disabled="currentMastersPage === 1"
+              @click="handleMastersPrevPage"
+            >
+              &lt; Prev
+            </button>
+            <span class="pagination-page-indicator">
+              Page {{ currentMastersPage }} Of {{ totalMastersPages }}
+            </span>
+            <button
+              type="button"
+              class="pagination-btn"
+              :disabled="currentMastersPage === totalMastersPages"
+              @click="handleMastersNextPage"
+            >
+              Next &gt;
+            </button>
           </div>
         </div>
       </section>
@@ -644,17 +848,135 @@
       </section>
 
       <!-- ===================================================================
-           TAB 4: BECOME A MASTER APPLICATION
+           TAB 4: BECOME A MASTER APPLICATION (Enhanced with Images Shown)
            =================================================================== -->
       <section v-else-if="activeTab === 'become_master'" class="tab-content-section" aria-labelledby="become-heading">
-        <div class="section-title-bar">
-          <h2 id="become-heading" class="section-title">Become A Rozka Master Trader</h2>
-          <p class="section-subtitle">
-            Monetize your trading edge. Earn up to 30% performance fees on all follower profits with zero hosting setup.
-          </p>
+        <!-- Top Hero Banner -->
+        <div class="become-master-hero card">
+          <div class="become-hero-content">
+            <span class="badge badge-gold-glow">Master Trader Program</span>
+            <h2 id="become-heading" class="become-hero-title">Become A Rozka Master Trader</h2>
+            <p class="become-hero-subtitle">
+              Monetize your proprietary edge. Trade your own capital while over 1,700 global copiers automatically mirror your execution in real-time. Keep up to 30% performance fees with zero hosting fees.
+            </p>
+          </div>
         </div>
 
-        <!-- Create Operation Card with 'X' Close icon taking user back per rule -->
+        <!-- Master Milestone Rewards & Conquest Fleet Showcase (Images shown in screenshots) -->
+        <div class="master-rewards-fleet-section card">
+          <div class="rewards-fleet-header">
+            <div class="fleet-title-stack">
+              <span class="badge badge-primary">Pinnacle Incentives</span>
+              <h3 class="fleet-section-title">Master Conquest Fleet Rewards</h3>
+              <p class="fleet-section-desc">
+                Top verified masters achieving volume milestones unlock conquest vehicle sponsorships, bespoke account manager coverage, and VIP gala invitations.
+              </p>
+            </div>
+          </div>
+
+          <!-- 3 Luxury Car Reward Cards using the real images shown in user screenshot -->
+          <div class="master-cars-grid">
+            <div
+              v-for="car in tradingStore.raffleCampaign.cars"
+              :key="'master_car_' + car.id"
+              class="master-car-card card"
+            >
+              <div class="master-car-img-wrapper">
+                <img :src="car.image" :alt="car.name" class="master-car-img" />
+                <div class="master-car-mission-badge">{{ car.mission }}</div>
+              </div>
+              <div class="master-car-body">
+                <h4 class="master-car-name">{{ car.name }}</h4>
+                <p class="master-car-specs">{{ car.specs }}</p>
+                <div class="master-car-tier-perk">
+                  <span class="tier-label">Master Unlock Tier:</span>
+                  <span class="tier-val">{{ car.id === 'car_1' ? 'Silver Master (50+ Copiers)' : car.id === 'car_2' ? 'Gold Master (200+ Copiers)' : 'Obsidian Master (500+ Copiers)' }}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Elite Master Hall of Fame (Illustrated Avatars as shown in screenshots) -->
+        <div class="master-hall-of-fame-section card">
+          <div class="hall-header">
+            <h3 class="hall-title">Join The Ranks Of Audited Master Traders</h3>
+            <p class="hall-subtitle">
+              You will be featured alongside top institutional leaders ranked by audited 90-day returns and real copier profits.
+            </p>
+          </div>
+
+          <div class="hall-masters-grid">
+            <div
+              v-for="master in tradingStore.masterTraders.slice(0, 4)"
+              :key="'hall_' + master.id"
+              class="hall-master-card"
+            >
+              <div class="hall-avatar-circle">
+                <svg v-if="master.avatarType === 'curls_tshirt'" viewBox="0 0 36 36" width="36" height="36" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M18 10c-3 0-5 2-5 4v1c0 2.5 2 4.5 5 4.5s5-2 5-4.5v-1c0-2-2-4-5-4z"/>
+                  <path d="M12 12c-1-1-2-1-3 0s-1 3 0 4"/>
+                  <path d="M24 12c1-1 2-1 3 0s1 3 0 4"/>
+                  <path d="M13 10c0-3 2.5-4 5-4s5 1 5 4"/>
+                  <path d="M9 30c0-6 4-8 9-8s9 2 9 8"/>
+                  <path d="M15 22v3c0 1.5 1.5 2.5 3 2.5s3-1 3-2.5v-3"/>
+                </svg>
+                <svg v-else-if="master.avatarType === 'polo_shirt'" viewBox="0 0 36 36" width="36" height="36" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M18 10c-3 0-4.5 1.8-4.5 4v1c0 2.5 2 4.5 4.5 4.5s4.5-2 4.5-4.5v-1c0-2.2-1.5-4-4.5-4z"/>
+                  <path d="M13 11c1-3 3-4 5-4s4 1 5 4"/>
+                  <path d="M9 30c0-6 4-8 9-8s9 2 9 8"/>
+                  <path d="M16 22l2 4 2-4"/>
+                </svg>
+                <svg v-else-if="master.avatarType === 'sunglasses'" viewBox="0 0 36 36" width="36" height="36" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M18 10c-3 0-4.5 2-4.5 4.5v1c0 2.5 2 4 4.5 4s4.5-1.5 4.5-4v-1c0-2.5-1.5-4.5-4.5-4.5z"/>
+                  <rect x="13.5" y="12.5" width="4" height="3" rx="1" fill="currentColor"/>
+                  <rect x="18.5" y="12.5" width="4" height="3" rx="1" fill="currentColor"/>
+                  <line x1="17.5" y1="14" x2="18.5" y2="14"/>
+                  <path d="M13 11c1-2.5 3-4 5-4s4 1.5 5 4"/>
+                  <path d="M9 30c0-6 4-8 9-8s9 2 9 8"/>
+                </svg>
+                <svg v-else viewBox="0 0 36 36" width="36" height="36" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M18 10c-3 0-4 1.8-4 4v1c0 2.2 1.8 4 4 4s4-1.8 4-4v-1c0-2.2-1-4-4-4z"/>
+                  <path d="M13 11c1-2.5 2.8-3.5 5-3.5s4 1 5 3.5"/>
+                  <path d="M9 30c0-6 4-8 9-8s9 2 9 8"/>
+                  <path d="M15 22l3 5 3-5"/>
+                </svg>
+              </div>
+              <div class="hall-master-info">
+                <h4 class="hall-name">{{ master.name }}</h4>
+                <span class="hall-stat text-success">+{{ master.return90d }}% 90D</span>
+                <span class="hall-copiers">{{ master.copiers }} Copiers</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Master Perks 3-Column Grid -->
+        <div class="master-perks-row">
+          <div class="perk-card card">
+            <div class="perk-icon-wrapper">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+            </div>
+            <h4 class="perk-title">Up To 30% Profit Sharing</h4>
+            <p class="perk-desc">Automatic weekly settlements calculated on a strict high-water mark directly into your master wallet.</p>
+          </div>
+          <div class="perk-card card">
+            <div class="perk-icon-wrapper">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+            </div>
+            <h4 class="perk-title">Sub-Millisecond Bridge</h4>
+            <p class="perk-desc">Zero latency slippage. Your trades replicate instantly to all follower accounts with institutional liquidity.</p>
+          </div>
+          <div class="perk-card card">
+            <div class="perk-icon-wrapper">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"/><path d="M2 12h20"/></svg>
+            </div>
+            <h4 class="perk-title">Verified Global Exposure</h4>
+            <p class="perk-desc">Instant visibility on our audited Leaderboard and Masters catalog across active high-net-worth copiers.</p>
+          </div>
+        </div>
+
+        <!-- Master Application Card with X close icon taking user back per user rule -->
         <div class="become-master-card card">
           <div class="card-create-header">
             <div class="create-title-stack">
@@ -1323,13 +1645,134 @@ const formatNumber = (val) => {
   return Number(val).toLocaleString('en-US');
 };
 
+// --- TAB 2: COPY MASTERS DIRECTORY LOGIC ---
+const searchMastersQuery = ref('');
+const isSortDropdownOpen = ref(false);
+const activeSortId = ref('return_over_drawdown');
+
+const sortOptions = [
+  { id: 'return_over_drawdown', label: 'Return over drawdown' },
+  { id: '90d_return', label: '90-day return' },
+  { id: 'lowest_drawdown', label: 'Lowest drawdown' },
+  { id: 'longest_track_record', label: 'Longest track record' },
+  { id: 'most_copiers', label: 'Most copiers' },
+];
+
+const activeSortOptionLabel = computed(() => {
+  const found = sortOptions.find((opt) => opt.id === activeSortId.value);
+  return found ? found.label : 'Return over drawdown';
+});
+
+const selectSortOption = (id) => {
+  activeSortId.value = id;
+  isSortDropdownOpen.value = false;
+  currentMastersPage.value = 1;
+};
+
+const sortedMasters = computed(() => {
+  let list = [...tradingStore.masterTraders];
+
+  // Filter by search query
+  if (searchMastersQuery.value && searchMastersQuery.value.trim() !== '') {
+    const q = searchMastersQuery.value.toLowerCase().trim();
+    list = list.filter(
+      (m) =>
+        (m.name && m.name.toLowerCase().includes(q)) ||
+        (m.subtitle && m.subtitle.toLowerCase().includes(q)) ||
+        (m.strategy && m.strategy.toLowerCase().includes(q))
+    );
+  }
+
+  // Sort by selected criteria
+  if (activeSortId.value === 'return_over_drawdown') {
+    list.sort((a, b) => {
+      const ratioA = (a.return90d || 0) / (a.maxDrawdown || 0.1);
+      const ratioB = (b.return90d || 0) / (b.maxDrawdown || 0.1);
+      return ratioB - ratioA;
+    });
+  } else if (activeSortId.value === '90d_return') {
+    list.sort((a, b) => (b.return90d || 0) - (a.return90d || 0));
+  } else if (activeSortId.value === 'lowest_drawdown') {
+    list.sort((a, b) => (a.maxDrawdown || 0) - (b.maxDrawdown || 0));
+  } else if (activeSortId.value === 'longest_track_record') {
+    list.sort((a, b) => (b.winRate || 0) - (a.winRate || 0));
+  } else if (activeSortId.value === 'most_copiers') {
+    list.sort((a, b) => (b.copiers || 0) - (a.copiers || 0));
+  }
+
+  return list;
+});
+
+const currentMastersPage = ref(1);
+const mastersPerPage = 12;
+
+const totalMastersPages = computed(() => {
+  return Math.ceil(sortedMasters.value.length / mastersPerPage) || 1;
+});
+
+const paginatedMasters = computed(() => {
+  const start = (currentMastersPage.value - 1) * mastersPerPage;
+  const end = start + mastersPerPage;
+  return sortedMasters.value.slice(start, end);
+});
+
+const mastersPaginationText = computed(() => {
+  const total = sortedMasters.value.length;
+  if (total === 0) return '0 of 0 masters';
+  const start = (currentMastersPage.value - 1) * mastersPerPage + 1;
+  const end = Math.min(start + mastersPerPage - 1, total);
+  return `${start}–${end} of ${total} masters`;
+});
+
+const handleMastersPrevPage = () => {
+  if (currentMastersPage.value > 1) {
+    currentMastersPage.value--;
+  }
+};
+
+const handleMastersNextPage = () => {
+  if (currentMastersPage.value < totalMastersPages.value) {
+    currentMastersPage.value++;
+  }
+};
+
+const generateMasterLinePoints = (data) => {
+  if (!data || data.length === 0) return '0,35 340,35';
+  const min = Math.min(...data);
+  const max = Math.max(...data);
+  const range = max - min || 1;
+  const stepX = 340 / (data.length - 1);
+  return data
+    .map((val, i) => {
+      const x = (i * stepX).toFixed(1);
+      const y = (60 - ((val - min) / range) * 50).toFixed(1);
+      return `${x},${y}`;
+    })
+    .join(' ');
+};
+
+const generateMasterAreaPoints = (data) => {
+  if (!data || data.length === 0) return '0,35 340,35 340,70 0,70';
+  const line = generateMasterLinePoints(data);
+  return `0,70 ${line} 340,70`;
+};
+
+const closeSortDropdown = () => {
+  isSortDropdownOpen.value = false;
+};
+
 // Lifecycle
 onMounted(() => {
+  document.addEventListener('click', closeSortDropdown);
   nextTick(() => {
     if (tableSearchInput.value) {
       tableSearchInput.value.focus();
     }
   });
+});
+
+onUnmounted(() => {
+  document.removeEventListener('click', closeSortDropdown);
 });
 </script>
 
@@ -2496,113 +2939,371 @@ onMounted(() => {
 }
 
 /* ===================================================================
-   TAB 2: MASTERS CATALOG STYLES
+   TAB 2: COPY MASTERS DIRECTORY STYLES (Matching User Screenshots)
    =================================================================== */
-.section-title-bar {
-  margin-bottom: 24px;
+.copy-masters-banner {
+  background: linear-gradient(135deg, hsl(0, 0%, 12%) 0%, hsl(220, 15%, 12%) 100%);
+  border: 1px solid var(--color-surface-400);
+  border-radius: 14px;
+  padding: 32px 36px;
+  margin-bottom: 28px;
+  box-shadow: var(--elevation-2);
 }
 
-.section-title {
-  font-size: 1.8rem;
-  color: var(--color-gold-500);
-  margin-bottom: 6px;
-}
-
-.section-subtitle {
-  color: var(--color-grey-300);
-  font-size: 0.95rem;
-  max-width: 800px;
-}
-
-.masters-catalog-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-  gap: 20px;
-}
-
-.master-catalog-card {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-}
-
-.catalog-card-header {
-  display: flex;
-  align-items: center;
-  gap: 14px;
-  margin-bottom: 14px;
-}
-
-.catalog-avatar {
-  width: 48px;
-  height: 48px;
-  border-radius: 50%;
-  object-fit: cover;
-  border: 2px solid var(--color-gold-500);
-}
-
-.catalog-meta {
-  flex: 1;
-}
-
-.catalog-name {
-  font-size: 1.15rem;
+.copy-masters-banner-title {
+  font-family: var(--font-family-heading);
+  font-size: 2.1rem;
+  font-weight: 700;
   color: var(--color-grey-100);
+  margin: 0 0 12px 0;
+  letter-spacing: -0.02em;
+}
+
+.copy-masters-banner-desc {
+  font-size: 1rem;
+  color: var(--color-grey-300);
+  line-height: 1.65;
+  max-width: 860px;
   margin: 0;
 }
 
-.catalog-strategy-title {
-  font-size: 0.78rem;
+.masters-search-sort-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  margin-bottom: 28px;
+  flex-wrap: wrap;
+}
+
+.masters-search-box {
+  flex: 1;
+  max-width: 420px;
+  min-width: 260px;
+}
+
+.sort-combobox-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  position: relative;
+}
+
+.sort-label-text {
+  font-family: var(--font-family-heading);
+  font-size: 0.9rem;
+  color: var(--color-grey-300);
+  white-space: nowrap;
+}
+
+.sort-dropdown-relative {
+  position: relative;
+}
+
+.sort-dropdown-trigger {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  background-color: var(--color-surface-700);
+  border: 1px solid var(--color-surface-400);
+  border-radius: 8px;
+  padding: 10px 16px;
+  color: var(--color-grey-100);
+  font-size: 0.92rem;
+  font-weight: 500;
+  min-width: 220px;
+  cursor: pointer;
+  transition: border-color 0.15s ease, background-color 0.15s ease;
+}
+
+.sort-dropdown-trigger:hover,
+.sort-dropdown-trigger.is-open {
+  border-color: var(--color-gold-500);
+  background-color: var(--color-surface-600);
+}
+
+.dropdown-chevron {
+  transition: transform 0.2s ease;
   color: var(--color-grey-300);
 }
 
-.catalog-strategy-desc {
-  font-size: 0.88rem;
-  color: var(--color-grey-300);
-  line-height: 1.5;
-  margin-bottom: 18px;
+.dropdown-chevron.is-rotated {
+  transform: rotate(180deg);
+  color: var(--color-gold-500);
 }
 
-.catalog-stats-row {
+/* Immediate appearance without popup animations per user rules */
+.sort-dropdown-menu {
+  position: absolute;
+  top: calc(100% + 6px);
+  right: 0;
+  width: 240px;
+  background-color: var(--color-surface-700);
+  border: 1px solid var(--color-surface-400);
+  border-radius: 8px;
+  box-shadow: var(--elevation-4);
+  z-index: 120;
+  padding: 6px 0;
+}
+
+.sort-dropdown-item {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 16px;
+  background: none;
+  border: none;
+  color: var(--color-grey-200);
+  font-size: 0.9rem;
+  text-align: left;
+  cursor: pointer;
+}
+
+.sort-dropdown-item:hover {
+  background-color: var(--color-surface-500);
+  color: var(--color-grey-100);
+}
+
+.sort-dropdown-item.is-active {
+  color: var(--color-gold-400);
+  font-weight: 600;
+}
+
+.sort-dropdown-item .check-icon {
+  flex-shrink: 0;
+}
+
+/* Master Cards Grid Layout (Matching 3 columns) */
+.masters-grid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 8px;
-  padding: 12px 0;
-  border-top: 1px solid var(--color-gold-alpha-08);
-  border-bottom: 1px solid var(--color-gold-alpha-08);
-  margin-bottom: 18px;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 22px;
 }
 
-.mini-stat {
+@media (max-width: 1200px) {
+  .masters-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .masters-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.master-card {
+  display: flex;
+  flex-direction: column;
+  background-color: var(--color-surface-700);
+  border: 1px solid var(--color-surface-500);
+  border-radius: 14px;
+  padding: 22px 24px;
+  box-shadow: var(--elevation-2);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+.master-card:hover {
+  border-color: var(--color-gold-alpha-30);
+  box-shadow: var(--elevation-3);
+  transform: translateY(-2px);
+}
+
+/* Card Header */
+.master-card-header {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 12px;
+}
+
+.master-avatar-circle {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  background-color: hsl(0, 0%, 96%);
+  color: hsl(0, 0%, 12%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  box-shadow: 0 2px 8px hsla(0, 0%, 0%, 0.35);
+}
+
+.master-avatar-circle svg {
+  display: block;
+}
+
+.master-title-stack {
+  flex: 1;
+  min-width: 0;
+}
+
+.master-name-text {
+  font-family: var(--font-family-heading);
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--color-grey-100);
+  margin: 0 0 3px 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.master-subtitle-text {
+  font-size: 0.82rem;
+  color: var(--color-grey-300);
+  margin: 0;
+  line-height: 1.35;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Prominent Equity Chart across Card */
+.master-equity-chart {
+  width: 100%;
+  height: 70px;
+  margin: 6px 0 16px 0;
+  overflow: hidden;
+}
+
+.master-chart-svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+/* Master Metrics 2x3 Grid */
+.master-metrics-block {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+
+.metrics-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+}
+
+.metric-col {
   display: flex;
   flex-direction: column;
 }
 
-.mini-stat-label {
-  font-family: var(--font-family-heading);
-  font-size: 0.72rem;
-  color: var(--color-grey-400);
+.metric-val {
+  font-size: 1.08rem;
+  font-weight: 700;
+  line-height: 1.25;
 }
 
-.mini-stat-value {
-  font-size: 1rem;
-  font-weight: 700;
+.metric-val.metric-white {
   color: var(--color-grey-100);
 }
 
-.btn-stop-copy {
-  background-color: var(--color-surface-400);
-  color: var(--color-error-400);
-  border: 1px solid var(--color-error-600);
-  border-radius: 8px;
-  padding: 10px 18px;
+.metric-lbl {
+  font-family: var(--font-family-heading);
+  font-size: 0.72rem;
+  color: var(--color-grey-300);
+  margin-top: 4px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.metric-lbl .info-icon {
+  font-size: 0.75rem;
+  color: var(--color-grey-400);
+  cursor: help;
+}
+
+/* Special Note for accounts like Titan High Yield */
+.master-special-note {
+  font-size: 0.76rem;
+  color: var(--color-grey-300);
+  line-height: 1.45;
+  padding: 8px 12px;
+  background-color: hsla(0, 0%, 100%, 0.03);
+  border-left: 2px solid var(--color-gold-500);
+  border-radius: 4px;
+  margin-bottom: 14px;
+}
+
+/* Master Card Footer */
+.master-card-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 14px;
+  border-top: 1px solid var(--color-surface-500);
+  margin-top: auto;
+}
+
+.master-copiers-fee {
+  font-size: 0.85rem;
+  color: var(--color-grey-300);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.master-copiers-fee .dot-sep {
+  color: var(--color-grey-400);
   font-weight: 700;
-  font-size: 0.9rem;
+}
+
+.btn-copy-master-pill {
+  background-color: transparent;
+  border: 1.5px solid var(--color-surface-400);
+  color: var(--color-grey-100);
+  border-radius: 9999px;
+  padding: 7px 18px;
+  font-size: 0.88rem;
+  font-weight: 600;
+  cursor: pointer;
   transition: all 0.2s ease;
 }
 
-.btn-stop-copy:hover {
-  background-color: var(--color-error-900);
+.btn-copy-master-pill:hover {
+  background-color: var(--color-gold-500);
+  color: hsl(0, 0%, 10%);
+  border-color: var(--color-gold-500);
+}
+
+/* Empty State */
+.masters-empty-state {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: 48px 24px;
+  color: var(--color-grey-300);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+
+/* Masters Pagination Row */
+.masters-pagination-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 32px;
+  padding: 16px 20px;
+  background-color: var(--color-surface-700);
+  border: 1px solid var(--color-surface-500);
+  border-radius: 12px;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.masters-count-status {
+  font-size: 0.92rem;
+  color: var(--color-grey-300);
+  font-weight: 500;
 }
 
 /* ===================================================================
@@ -2660,13 +3361,331 @@ onMounted(() => {
 }
 
 /* ===================================================================
-   TAB 4: BECOME A MASTER APPLICATION
+   TAB 4: BECOME A MASTER APPLICATION STYLES (With Images Shown)
    =================================================================== */
+.become-master-hero {
+  background: linear-gradient(135deg, hsl(0, 0%, 12%) 0%, hsl(44, 40%, 12%) 100%);
+  border: 1px solid var(--color-gold-alpha-30);
+  border-radius: 14px;
+  padding: 36px 40px;
+  margin-bottom: 28px;
+  box-shadow: var(--elevation-2);
+}
+
+.become-hero-content {
+  max-width: 820px;
+}
+
+.badge-gold-glow {
+  background-color: var(--color-gold-alpha-15);
+  color: var(--color-gold-400);
+  border: 1px solid var(--color-gold-alpha-30);
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  display: inline-block;
+  margin-bottom: 12px;
+}
+
+.become-hero-title {
+  font-family: var(--font-family-heading);
+  font-size: 2.2rem;
+  color: var(--color-gold-500);
+  margin: 0 0 12px 0;
+  letter-spacing: -0.02em;
+}
+
+.become-hero-subtitle {
+  font-size: 1.02rem;
+  color: var(--color-grey-200);
+  line-height: 1.65;
+  margin: 0;
+}
+
+/* Master Milestone Rewards & Conquest Fleet */
+.master-rewards-fleet-section {
+  padding: 32px;
+  margin-bottom: 28px;
+  background-color: var(--color-surface-700);
+  border: 1px solid var(--color-surface-500);
+  border-radius: 14px;
+}
+
+.rewards-fleet-header {
+  margin-bottom: 24px;
+}
+
+.fleet-section-title {
+  font-family: var(--font-family-heading);
+  font-size: 1.65rem;
+  color: var(--color-grey-100);
+  margin: 8px 0 6px 0;
+}
+
+.fleet-section-desc {
+  color: var(--color-grey-300);
+  font-size: 0.95rem;
+  max-width: 780px;
+  margin: 0;
+}
+
+.master-cars-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+
+@media (max-width: 992px) {
+  .master-cars-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.master-car-card {
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  background-color: var(--color-surface-600);
+  border: 1px solid var(--color-surface-400);
+  border-radius: 12px;
+  transition: transform 0.2s ease, border-color 0.2s ease;
+}
+
+.master-car-card:hover {
+  transform: translateY(-3px);
+  border-color: var(--color-gold-500);
+  box-shadow: var(--elevation-3);
+}
+
+.master-car-img-wrapper {
+  position: relative;
+  width: 100%;
+  height: 180px;
+  background-color: hsl(0, 0%, 8%);
+  overflow: hidden;
+}
+
+.master-car-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.master-car-card:hover .master-car-img {
+  transform: scale(1.04);
+}
+
+.master-car-mission-badge {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  background-color: hsla(0, 0%, 0%, 0.75);
+  border: 1px solid var(--color-gold-500);
+  color: var(--color-gold-400);
+  font-size: 0.76rem;
+  font-weight: 700;
+  padding: 4px 10px;
+  border-radius: 6px;
+  backdrop-filter: blur(4px);
+}
+
+.master-car-body {
+  padding: 18px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  flex: 1;
+}
+
+.master-car-name {
+  font-family: var(--font-family-heading);
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--color-grey-100);
+  margin: 0;
+}
+
+.master-car-specs {
+  font-size: 0.84rem;
+  color: var(--color-grey-300);
+  margin: 0;
+  line-height: 1.4;
+}
+
+.master-car-tier-perk {
+  margin-top: auto;
+  padding-top: 10px;
+  border-top: 1px solid var(--color-surface-400);
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.tier-label {
+  font-size: 0.74rem;
+  color: var(--color-grey-400);
+}
+
+.tier-val {
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: var(--color-gold-400);
+}
+
+/* Master Hall of Fame Section */
+.master-hall-of-fame-section {
+  padding: 30px;
+  margin-bottom: 28px;
+  background-color: var(--color-surface-700);
+  border: 1px solid var(--color-surface-500);
+  border-radius: 14px;
+}
+
+.hall-header {
+  margin-bottom: 22px;
+}
+
+.hall-title {
+  font-family: var(--font-family-heading);
+  font-size: 1.45rem;
+  color: var(--color-grey-100);
+  margin: 0 0 6px 0;
+}
+
+.hall-subtitle {
+  color: var(--color-grey-300);
+  font-size: 0.92rem;
+  margin: 0;
+}
+
+.hall-masters-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+}
+
+@media (max-width: 992px) {
+  .hall-masters-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 560px) {
+  .hall-masters-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.hall-master-card {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 16px;
+  background-color: var(--color-surface-600);
+  border: 1px solid var(--color-surface-400);
+  border-radius: 10px;
+}
+
+.hall-avatar-circle {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background-color: hsl(0, 0%, 96%);
+  color: hsl(0, 0%, 12%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.hall-master-info {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.hall-name {
+  font-family: var(--font-family-heading);
+  font-size: 0.96rem;
+  color: var(--color-grey-100);
+  margin: 0 0 2px 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.hall-stat {
+  font-size: 0.82rem;
+  font-weight: 700;
+}
+
+.hall-copiers {
+  font-size: 0.74rem;
+  color: var(--color-grey-300);
+}
+
+/* Master Perks 3-Column Row */
+.master-perks-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+  margin-bottom: 28px;
+}
+
+@media (max-width: 900px) {
+  .master-perks-row {
+    grid-template-columns: 1fr;
+  }
+}
+
+.perk-card {
+  padding: 24px;
+  background-color: var(--color-surface-700);
+  border: 1px solid var(--color-surface-500);
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.perk-icon-wrapper {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background-color: var(--color-gold-alpha-15);
+  color: var(--color-gold-500);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 4px;
+}
+
+.perk-title {
+  font-family: var(--font-family-heading);
+  font-size: 1.1rem;
+  color: var(--color-grey-100);
+  margin: 0;
+}
+
+.perk-desc {
+  font-size: 0.88rem;
+  color: var(--color-grey-300);
+  line-height: 1.5;
+  margin: 0;
+}
+
+/* Master Application Form Card */
 .become-master-card {
-  max-width: 720px;
+  max-width: 760px;
   margin: 0 auto;
   position: relative;
-  padding: 32px;
+  padding: 34px 38px;
+  background-color: var(--color-surface-700);
+  border: 1px solid var(--color-gold-alpha-30);
+  border-radius: 14px;
+  box-shadow: var(--elevation-3);
 }
 
 .card-create-header {
@@ -2684,13 +3703,14 @@ onMounted(() => {
 }
 
 .create-card-title {
-  font-size: 1.45rem;
+  font-family: var(--font-family-heading);
+  font-size: 1.5rem;
   color: var(--color-gold-500);
   margin: 0 0 4px 0;
 }
 
 .create-card-subtitle {
-  font-size: 0.88rem;
+  font-size: 0.9rem;
   color: var(--color-grey-300);
 }
 
@@ -2700,11 +3720,12 @@ onMounted(() => {
   color: var(--color-grey-400);
   padding: 6px;
   border-radius: 6px;
+  cursor: pointer;
 }
 
 .card-close-x:hover {
   color: var(--color-gold-500);
-  background-color: var(--color-surface-400);
+  background-color: var(--color-surface-500);
 }
 
 .textarea-group {
@@ -2753,6 +3774,7 @@ onMounted(() => {
   padding: 8px 18px;
   font-size: 0.88rem;
   font-weight: 600;
+  cursor: pointer;
   transition: all 0.2s ease;
 }
 
