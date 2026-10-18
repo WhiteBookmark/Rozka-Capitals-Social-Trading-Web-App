@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100" height="100">
+  <circle cx="50" cy="50" r="48" fill="#ffffff" stroke="#222222" stroke-width="2"/>
+  <g fill="none" stroke="#111111" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+    <!-- Curly Hair -->
+    <path d="M26 42 C24 20 34 14 50 14 C66 14 76 20 74 42 C78 34 76 22 66 18 C54 14 44 14 34 18 C24 22 22 34 26 42 Z" fill="#111111"/>
+    <circle cx="34" cy="24" r="5" fill="#111111"/>
+    <circle cx="46" cy="18" r="6" fill="#111111"/>
+    <circle cx="58" cy="20" r="6" fill="#111111"/>
+    <circle cx="68" cy="26" r="5" fill="#111111"/>
+    <!-- Face Outline -->
+    <path d="M33 38 C33 58 41 68 50 68 C59 68 67 58 67 38" fill="#ffffff"/>
+    <!-- Eyes & Brows -->
+    <ellipse cx="42" cy="44" rx="2.5" ry="3.5" fill="#111111"/>
+    <ellipse cx="58" cy="44" rx="2.5" ry="3.5" fill="#111111"/>
+    <path d="M38 38 Q42 35 46 38"/>
+    <path d="M54 38 Q58 35 62 38"/>
+    <!-- Nose & Smile -->
+    <path d="M50 46 L48 52 L52 52"/>
+    <path d="M43 58 Q50 64 57 58"/>
+    <!-- Shirt -->
+    <path d="M43 68 L43 76 L28 84 L26 96"/>
+    <path d="M57 68 L57 76 L72 84 L74 96"/>
+    <path d="M43 76 L50 84 L57 76"/>
+  </g>
+</svg>

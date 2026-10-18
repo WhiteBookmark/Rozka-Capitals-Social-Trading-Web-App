@@ -10,12 +10,32 @@
         </div>
       </router-link>
 
-      <!-- Desktop Navigation Links -->
+      <!-- Desktop Navigation Links with Icons and Serif Typography -->
       <nav class="desktop-nav">
-        <router-link to="/" class="nav-link">Copy Trade</router-link>
-        <router-link to="/dashboard" class="nav-link">Social Dashboard</router-link>
-        <router-link to="/investor" class="nav-link">Investor Center</router-link>
-        <router-link to="/master-trader" class="nav-link">Master Portal</router-link>
+        <router-link to="/" class="nav-link">
+          <span class="nav-link-icon" aria-hidden="true">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+          </span>
+          <span class="nav-link-text">Copy Trade</span>
+        </router-link>
+        <router-link to="/dashboard" class="nav-link">
+          <span class="nav-link-icon" aria-hidden="true">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>
+          </span>
+          <span class="nav-link-text">Social Dashboard</span>
+        </router-link>
+        <router-link to="/investor" class="nav-link">
+          <span class="nav-link-icon" aria-hidden="true">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+          </span>
+          <span class="nav-link-text">Investor Center</span>
+        </router-link>
+        <router-link to="/master-trader" class="nav-link">
+          <span class="nav-link-icon" aria-hidden="true">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+          </span>
+          <span class="nav-link-text">Master Portal</span>
+        </router-link>
       </nav>
 
       <!-- User Auth Actions / Status -->
@@ -52,10 +72,30 @@
     <!-- Mobile Drawer Menu -->
     <Transition name="drawer">
       <div v-if="isMobileMenuOpen" class="mobile-nav-drawer">
-        <router-link to="/" class="mobile-nav-link" @click="isMobileMenuOpen = false">Copy Trade</router-link>
-        <router-link to="/dashboard" class="mobile-nav-link" @click="isMobileMenuOpen = false">Social Dashboard</router-link>
-        <router-link to="/investor" class="mobile-nav-link" @click="isMobileMenuOpen = false">Investor Center</router-link>
-        <router-link to="/master-trader" class="mobile-nav-link" @click="isMobileMenuOpen = false">Master Portal</router-link>
+        <router-link to="/" class="mobile-nav-link" @click="isMobileMenuOpen = false">
+          <span class="nav-link-icon" aria-hidden="true">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+          </span>
+          <span class="nav-link-text">Copy Trade</span>
+        </router-link>
+        <router-link to="/dashboard" class="mobile-nav-link" @click="isMobileMenuOpen = false">
+          <span class="nav-link-icon" aria-hidden="true">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>
+          </span>
+          <span class="nav-link-text">Social Dashboard</span>
+        </router-link>
+        <router-link to="/investor" class="mobile-nav-link" @click="isMobileMenuOpen = false">
+          <span class="nav-link-icon" aria-hidden="true">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+          </span>
+          <span class="nav-link-text">Investor Center</span>
+        </router-link>
+        <router-link to="/master-trader" class="mobile-nav-link" @click="isMobileMenuOpen = false">
+          <span class="nav-link-icon" aria-hidden="true">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+          </span>
+          <span class="nav-link-text">Master Portal</span>
+        </router-link>
         
         <div class="mobile-auth-group">
           <template v-if="authStore.isLoggedIn">
@@ -140,17 +180,53 @@ const handleLogout = () => {
   display: flex;
   align-items: center;
   gap: 28px;
+  font-family: var(--font-family-heading);
 }
 
 .nav-link {
+  font-family: var(--font-family-heading);
   font-size: 0.95rem;
-  font-weight: 500;
+  font-weight: 600;
   color: var(--color-grey-100);
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: none !important;
+  text-decoration: none !important;
+  padding: 6px 0;
+}
+
+.nav-link-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-gold-500);
+  background: none !important;
+  text-decoration: none !important;
+  flex-shrink: 0;
+}
+
+.nav-link-text {
+  position: relative;
+  background: linear-gradient(to right, var(--color-gold-500), var(--color-gold-500)) no-repeat right bottom;
+  background-size: 0% 2px;
+  transition: background-size 0.3s ease, color 0.3s ease;
+}
+
+.nav-link:hover .nav-link-text {
+  color: var(--color-gold-400);
+  background-size: 100% 2px;
+  background-position: left bottom;
 }
 
 .nav-link.router-link-active {
   color: var(--color-gold-500);
+}
+
+.nav-link.router-link-active .nav-link-text {
+  color: var(--color-gold-500);
   font-weight: 700;
+  background-size: 100% 2px;
 }
 
 .auth-actions {
@@ -183,6 +259,7 @@ const handleLogout = () => {
 }
 
 .user-name {
+  font-family: var(--font-family-heading);
   font-size: 0.85rem;
   font-weight: 700;
   color: var(--color-gold-500);
@@ -211,6 +288,7 @@ const handleLogout = () => {
 }
 
 .btn-link {
+  font-family: var(--font-family-heading);
   padding: 8px 18px;
   border-radius: 8px;
   font-size: 0.9rem;
@@ -269,9 +347,39 @@ const handleLogout = () => {
 }
 
 .mobile-nav-link {
+  font-family: var(--font-family-heading);
   font-size: 1.05rem;
-  padding: 8px 0;
+  font-weight: 600;
+  padding: 10px 0;
   border-bottom: 1px solid rgba(243, 198, 73, 0.08);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: none !important;
+  text-decoration: none !important;
+}
+
+.mobile-nav-link .nav-link-icon {
+  display: flex;
+  align-items: center;
+  color: var(--color-gold-500);
+}
+
+.mobile-nav-link .nav-link-text {
+  background: linear-gradient(to right, var(--color-gold-500), var(--color-gold-500)) no-repeat right bottom;
+  background-size: 0% 2px;
+  transition: background-size 0.3s ease, color 0.3s ease;
+}
+
+.mobile-nav-link:hover .nav-link-text {
+  color: var(--color-gold-400);
+  background-size: 100% 2px;
+  background-position: left bottom;
+}
+
+.mobile-nav-link.router-link-active .nav-link-text {
+  color: var(--color-gold-500);
+  background-size: 100% 2px;
 }
 
 .mobile-auth-group {

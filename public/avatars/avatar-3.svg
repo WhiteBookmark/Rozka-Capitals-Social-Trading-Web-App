@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100" height="100">
+  <circle cx="50" cy="50" r="48" fill="#ffffff" stroke="#222222" stroke-width="2"/>
+  <g fill="none" stroke="#111111" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+    <!-- Headwrap / Bun Hair -->
+    <ellipse cx="50" cy="20" rx="14" ry="10" fill="#111111"/>
+    <path d="M26 44 C25 26 36 22 50 22 C64 22 75 26 74 44 C72 32 60 28 50 28 C40 28 28 32 26 44 Z" fill="#111111"/>
+    <!-- Face Outline -->
+    <path d="M33 40 C33 60 41 71 50 71 C59 71 67 60 67 40" fill="#ffffff"/>
+    <!-- Earring / Ear -->
+    <path d="M30 46 C28 46 28 52 32 54"/>
+    <circle cx="30" cy="58" r="2.5" fill="#111111"/>
+    <path d="M70 46 C72 46 72 52 68 54"/>
+    <circle cx="70" cy="58" r="2.5" fill="#111111"/>
+    <!-- Eyes with lashes -->
+    <ellipse cx="42" cy="46" rx="2.5" ry="3.5" fill="#111111"/>
+    <ellipse cx="58" cy="46" rx="2.5" ry="3.5" fill="#111111"/>
+    <path d="M37 42 Q42 39 46 41"/>
+    <path d="M54 41 Q58 39 63 42"/>
+    <!-- Nose & Smile -->
+    <path d="M50 48 L48 54 L52 54"/>
+    <path d="M43 61 Q50 67 57 61"/>
+    <!-- Neck & Blouse -->
+    <path d="M43 71 L43 78 C35 84 28 90 26 96"/>
+    <path d="M57 71 L57 78 C65 84 72 90 74 96"/>
+    <path d="M43 78 Q50 86 57 78" fill="#ffffff"/>
+  </g>
+</svg>

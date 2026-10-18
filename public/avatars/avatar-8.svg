@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100" height="100">
+  <circle cx="50" cy="50" r="48" fill="#ffffff" stroke="#222222" stroke-width="2"/>
+  <g fill="none" stroke="#111111" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+    <!-- Cap Brim & Hat -->
+    <path d="M26 34 C28 20 40 16 50 16 C60 16 72 20 74 34 Z" fill="#111111"/>
+    <path d="M22 36 Q50 32 78 36 L70 40 Q50 36 30 40 Z" fill="#111111"/>
+    <!-- Face Outline -->
+    <path d="M34 40 C34 58 41 68 50 68 C59 68 66 58 66 40" fill="#ffffff"/>
+    <!-- Eyes & Brows -->
+    <ellipse cx="43" cy="46" rx="2.5" ry="3.5" fill="#111111"/>
+    <ellipse cx="57" cy="46" rx="2.5" ry="3.5" fill="#111111"/>
+    <path d="M39 42 Q43 40 47 41"/>
+    <path d="M53 41 Q57 40 61 42"/>
+    <!-- Nose & Smile -->
+    <path d="M50 49 L48 54 L52 54"/>
+    <path d="M44 60 Q50 64 56 60"/>
+    <!-- Hoodie collar -->
+    <path d="M43 68 L43 76 L28 84 L26 96"/>
+    <path d="M57 68 L57 76 L72 84 L74 96"/>
+    <path d="M38 78 Q50 88 62 78" stroke-width="2.5"/>
+  </g>
+</svg>

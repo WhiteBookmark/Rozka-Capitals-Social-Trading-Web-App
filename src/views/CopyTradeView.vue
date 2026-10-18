@@ -1,30 +1,5 @@
 <template>
   <div class="copy-trade-page">
-    <!-- Top Sub-Header & Live Breadcrumb Bar -->
-    <div class="sub-header-bar">
-      <div class="container sub-header-content">
-        <div class="breadcrumb-group">
-          <router-link to="/" class="breadcrumb-item logo-link">Home</router-link>
-          <span class="breadcrumb-separator">
-            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
-          </span>
-          <span class="breadcrumb-current">Copy Trade</span>
-        </div>
-
-        <!-- Right Quick Status / Portfolio Balance -->
-        <div class="quick-status-group">
-          <div class="balance-chip card-elevation-1">
-            <span class="balance-label">Copy Wallet</span>
-            <strong class="balance-amount">${{ formatCurrency(tradingStore.accountSummary.totalBalance) }}</strong>
-          </div>
-          <div class="status-indicator-chip card-elevation-1">
-            <span class="live-dot-pulse"></span>
-            <span class="status-text">Institutional Feed Active</span>
-          </div>
-        </div>
-      </div>
-    </div>
-
     <div class="container main-content-container">
       <!-- Sub-Navigation Tabs Bar (Leaderboard, Copy Masters, My Copies, Become A Master, Community) -->
       <nav class="sub-nav-tabs" aria-label="Copy Trade Navigation Tabs">
@@ -90,7 +65,7 @@
           </div>
         </div>
 
-        <!-- Live Real-Time Trade Stream Ticker (Continuous Marquee) -->
+        <!-- Live Real-Time Trade Stream Ticker (Continuous Marquee with Profile Images) -->
         <div class="live-ticker-marquee card" aria-label="Real-time Copier Trade Stream">
           <div class="marquee-track">
             <div
@@ -99,11 +74,13 @@
               class="ticker-item"
             >
               <div class="avatar-circle-sm">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                <img :src="trade.avatar" :alt="trade.maskedCopier" class="ticker-avatar-img" />
               </div>
               <span class="ticker-user">{{ trade.maskedCopier }}</span>
               <span class="ticker-symbol">{{ trade.symbol }}</span>
-              <span class="ticker-profit">+${{ formatCurrency(trade.profit) }}</span>
+              <span class="ticker-profit" :class="trade.profit >= 0 ? 'text-profit-pos' : 'text-profit-neg'">
+                {{ trade.profit >= 0 ? '+' : '-' }}${{ formatCurrency(Math.abs(trade.profit)) }}
+              </span>
             </div>
           </div>
         </div>
@@ -171,11 +148,26 @@
             </div>
 
             <div class="master-profile-block">
-              <div class="master-monogram-circle">
-                {{ tradingStore.topMasterMonth.monogram }}
+              <div class="master-monogram-circle" title="Oil & Majors Master Strategy">
+                <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="oil-master-svg">
+                  <path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z" fill="var(--color-gold-500)" stroke="none"/>
+                  <path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/>
+                </svg>
               </div>
               <div class="master-meta-info">
-                <h3 class="master-name">{{ tradingStore.topMasterMonth.name }}</h3>
+                <div class="master-name-row">
+                  <h3 class="master-name">{{ tradingStore.topMasterMonth.name }}</h3>
+                  <div class="oil-majors-chips" title="Trading WTI Crude Oil & Major FX Pairs">
+                    <span class="asset-chip">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/></svg>
+                      Oil
+                    </span>
+                    <span class="asset-chip">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+                      Majors
+                    </span>
+                  </div>
+                </div>
                 <span class="master-active-copiers">{{ tradingStore.topMasterMonth.activeCopiers }} Active Copiers</span>
               </div>
             </div>
@@ -270,7 +262,7 @@
               <div class="podium-rank-badge rank-2-badge">2</div>
               <div class="podium-avatar-wrapper">
                 <div class="podium-avatar-circle">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                  <img :src="tradingStore.podiumCopiers[0].avatar" :alt="tradingStore.podiumCopiers[0].maskedId" class="podium-avatar-img" />
                 </div>
               </div>
               <div class="podium-user-id">{{ tradingStore.podiumCopiers[0].maskedId }}</div>
@@ -288,7 +280,7 @@
               <div class="podium-rank-badge rank-1-badge">1</div>
               <div class="podium-avatar-wrapper rank-1-avatar">
                 <div class="podium-avatar-circle rank-1-circle">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                  <img :src="tradingStore.podiumCopiers[1].avatar" :alt="tradingStore.podiumCopiers[1].maskedId" class="podium-avatar-img" />
                 </div>
               </div>
               <div class="podium-user-id champion-name">{{ tradingStore.podiumCopiers[1].maskedId }}</div>
@@ -302,7 +294,7 @@
               <div class="podium-rank-badge rank-3-badge">3</div>
               <div class="podium-avatar-wrapper">
                 <div class="podium-avatar-circle">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                  <img :src="tradingStore.podiumCopiers[2].avatar" :alt="tradingStore.podiumCopiers[2].maskedId" class="podium-avatar-img" />
                 </div>
               </div>
               <div class="podium-user-id">{{ tradingStore.podiumCopiers[2].maskedId }}</div>
@@ -370,7 +362,7 @@
                   <td class="td-copier">
                     <div class="copier-cell-group">
                       <div class="copier-avatar-circle">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                        <img :src="copier.avatar" :alt="copier.maskedId" class="copier-avatar-img" />
                       </div>
                       <div class="copier-id-stack">
                         <strong class="copier-masked-id">{{ copier.maskedId }}</strong>
@@ -423,12 +415,12 @@
                     </div>
                   </td>
 
-                  <!-- Master Trader Column with Copy Button -->
+                  <!-- Master Trader Column with Copy Button (Rectangular with rounded corners) -->
                   <td class="td-master">
                     <div class="master-action-cell">
                       <button
                         type="button"
-                        class="btn-copy-master-pill"
+                        class="btn-copy-master-action"
                         @click="openCopyModalByName(copier.masterName)"
                       >
                         Copy Master
@@ -787,6 +779,30 @@
           </p>
         </div>
 
+        <!-- Top KPI Summary Bar when portfolios are copied -->
+        <div v-if="tradingStore.copiedTraders.length > 0" class="my-copies-summary-bar">
+          <div class="summary-kpi-item card">
+            <span class="kpi-label">Total Capital Allocated</span>
+            <div class="kpi-value gold-highlight">${{ formatCurrency(myCopiesTotalAllocated) }}</div>
+            <span class="kpi-footer-note">Institutional Segregated Balance</span>
+          </div>
+          <div class="summary-kpi-item card">
+            <span class="kpi-label">Net Performance P&L</span>
+            <div class="kpi-value" :class="myCopiesTotalPnl >= 0 ? 'text-success' : 'text-danger'">
+              {{ myCopiesTotalPnl >= 0 ? '+' : '' }}${{ formatCurrency(myCopiesTotalPnl) }}
+            </div>
+            <span class="kpi-footer-note">Real-Time Mirrored Return</span>
+          </div>
+          <div class="summary-kpi-item card">
+            <span class="kpi-label">Active Master Mirrors</span>
+            <div class="kpi-value text-success">
+              <span class="online-indicator"></span>
+              {{ tradingStore.copiedTraders.length }} Masters
+            </div>
+            <span class="kpi-footer-note">Automated Execution Active</span>
+          </div>
+        </div>
+
         <div v-if="tradingStore.copiedTraders.length > 0" class="my-copies-grid">
           <div
             v-for="copied in tradingStore.copiedTraders"
@@ -795,11 +811,11 @@
           >
             <div class="my-copy-header">
               <img :src="copied.avatar" :alt="copied.name" class="my-copy-avatar" />
-              <div>
+              <div class="my-copy-title-block">
                 <h3 class="my-copy-name">{{ copied.name }}</h3>
                 <span class="my-copy-title">{{ copied.title }}</span>
               </div>
-              <span class="badge badge-success">Active Mirror</span>
+              <span class="badge badge-success copy-status-badge">Active Mirror</span>
             </div>
 
             <div class="my-copy-stats-grid">
@@ -837,9 +853,11 @@
 
         <div v-else class="empty-state-card card">
           <div class="empty-state-content">
-            <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
-            <h3>No Master Portfolios Currently Copied</h3>
-            <p>Select any verified master trader from the Leaderboard or Masters catalog to begin automated institutional copying.</p>
+            <div class="empty-state-icon-circle icon-circle">
+              <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
+            </div>
+            <h3 class="empty-state-title">No Master Portfolios Currently Copied</h3>
+            <p class="empty-state-desc">Select any verified master trader from the Leaderboard or Masters catalog to begin automated institutional copying.</p>
             <button type="button" class="btn-primary-action" @click="activeTab = 'leaderboard'">
               Explore Leaderboard
             </button>
@@ -1814,7 +1832,7 @@ const navigationTabs = [
   {
     id: 'leaderboard',
     label: 'Leaderboard',
-    badge: 'Live',
+    badge: null,
     icon: `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>`,
   },
   {
@@ -1842,6 +1860,15 @@ const navigationTabs = [
     icon: `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>`,
   },
 ];
+
+// --- MY COPIES COMPUTED TOTALS ---
+const myCopiesTotalAllocated = computed(() => {
+  return tradingStore.copiedTraders.reduce((sum, c) => sum + (c.copiedAmount || 0), 0);
+});
+
+const myCopiesTotalPnl = computed(() => {
+  return tradingStore.copiedTraders.reduce((sum, c) => sum + (c.currentPnl || 0), 0);
+});
 
 // --- LIVE TICKER MARQUEE REPEAT ---
 const duplicatedStream = computed(() => {
@@ -2603,88 +2630,14 @@ onUnmounted(() => {
 .copy-trade-page {
   width: 100%;
   min-height: calc(100vh - 80px);
-  padding-bottom: 60px;
+  padding: 0 clamp(20px, 4vw, 48px) 60px;
+  box-sizing: border-box;
 }
 
-/* Sub-Header & Breadcrumb Bar */
-.sub-header-bar {
-  background-color: var(--color-surface-500);
-  border-bottom: 1px solid var(--color-gold-alpha-15);
-  padding: 14px 0;
-  margin-bottom: 24px;
-}
-
-.sub-header-content {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  flex-wrap: wrap;
-  gap: 16px;
-}
-
-.breadcrumb-group {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 0.95rem;
-}
-
-.breadcrumb-item {
-  color: var(--color-grey-300);
-}
-
-.breadcrumb-item:hover {
-  color: var(--color-gold-400);
-}
-
-.breadcrumb-separator {
-  color: var(--color-grey-500);
-  display: flex;
-  align-items: center;
-}
-
-.breadcrumb-current {
-  color: var(--color-gold-500);
-  font-weight: 600;
-}
-
-.quick-status-group {
-  display: flex;
-  align-items: center;
-  gap: 14px;
-}
-
-.balance-chip {
-  background-color: var(--color-surface-400);
-  border: 1px solid var(--color-gold-alpha-30);
-  border-radius: 20px;
-  padding: 6px 16px;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 0.88rem;
-}
-
-.balance-label {
-  color: var(--color-grey-400);
-  font-family: var(--font-family-heading);
-}
-
-.balance-amount {
-  color: var(--color-gold-500);
-  font-weight: 700;
-}
-
-.status-indicator-chip {
-  background-color: var(--color-surface-400);
-  border: 1px solid hsl(156 87% 43% / 0.3);
-  border-radius: 20px;
-  padding: 6px 14px;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 0.82rem;
-  color: var(--color-success-100);
+.main-content-container {
+  max-width: 1320px;
+  margin: 0 auto;
+  padding: 0;
 }
 
 .live-dot-pulse {
@@ -2890,15 +2843,23 @@ onUnmounted(() => {
 }
 
 .avatar-circle-sm {
-  width: 24px;
-  height: 24px;
+  width: 26px;
+  height: 26px;
   border-radius: 50%;
-  background-color: var(--color-surface-400);
-  color: var(--color-gold-500);
+  overflow: hidden;
+  background-color: #ffffff;
   display: flex;
   align-items: center;
   justify-content: center;
-  border: 1px solid var(--color-gold-alpha-30);
+  flex-shrink: 0;
+  border: 1px solid rgba(255, 255, 255, 0.4);
+}
+
+.ticker-avatar-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
 }
 
 .ticker-user {
@@ -2912,8 +2873,15 @@ onUnmounted(() => {
 }
 
 .ticker-profit {
-  color: var(--color-success-400);
   font-weight: 700;
+}
+
+.text-profit-pos {
+  color: var(--color-success-400);
+}
+
+.text-profit-neg {
+  color: var(--color-error-400);
 }
 
 /* Dual Big Feature Cards */
@@ -3075,9 +3043,47 @@ onUnmounted(() => {
   box-shadow: var(--elevation-2);
 }
 
+.oil-master-svg {
+  color: var(--color-gold-500);
+}
+
 .master-meta-info {
   display: flex;
   flex-direction: column;
+  gap: 4px;
+}
+
+.master-name-row {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.oil-majors-chips {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.asset-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background-color: var(--color-surface-400);
+  border: 1px solid var(--color-gold-alpha-30);
+  color: var(--color-gold-400);
+  font-size: 0.72rem;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+}
+
+.asset-chip svg {
+  color: var(--color-gold-500);
+  flex-shrink: 0;
 }
 
 .master-name {
@@ -3373,20 +3379,28 @@ onUnmounted(() => {
   width: 60px;
   height: 60px;
   border-radius: 50%;
-  background-color: var(--color-surface-400);
+  overflow: hidden;
+  background-color: #ffffff;
   border: 1px solid var(--color-gold-alpha-30);
-  color: var(--color-gold-400);
   display: flex;
   align-items: center;
   justify-content: center;
+  box-shadow: var(--elevation-1);
+}
+
+.podium-avatar-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
 }
 
 .rank-1-circle {
   width: 76px;
   height: 76px;
-  background-color: var(--color-surface-300);
-  border: 2px solid var(--color-gold-500);
-  color: var(--color-gold-500);
+  background-color: #ffffff;
+  border: 3px solid var(--color-gold-500);
+  box-shadow: 0 0 16px var(--color-gold-alpha-30);
 }
 
 .podium-user-id {
@@ -3567,13 +3581,20 @@ onUnmounted(() => {
   width: 40px;
   height: 40px;
   border-radius: 50%;
-  background-color: var(--color-surface-400);
+  overflow: hidden;
+  background-color: #ffffff;
   border: 1px solid var(--color-gold-alpha-30);
-  color: var(--color-gold-500);
   display: flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
+}
+
+.copier-avatar-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
 }
 
 .copier-id-stack {
@@ -3615,7 +3636,7 @@ onUnmounted(() => {
   height: 100%;
 }
 
-/* Master Column & Copy Pill Button */
+/* Master Column & Rectangular Rounded Copy Button */
 .master-action-cell {
   display: flex;
   flex-direction: column;
@@ -3623,21 +3644,25 @@ onUnmounted(() => {
   gap: 4px;
 }
 
-.btn-copy-master-pill {
-  background-color: var(--color-surface-400);
-  border: 1px solid var(--color-gold-500);
-  color: var(--color-gold-500);
-  border-radius: 16px;
-  padding: 6px 16px;
-  font-size: 0.85rem;
-  font-weight: 700;
-  transition: all 0.2s ease;
-}
-
-.btn-copy-master-pill:hover {
+.btn-copy-master-action {
   background-color: var(--color-gold-500);
   color: var(--color-surface-900);
+  border: 1px solid var(--color-gold-500);
+  border-radius: 8px;
+  padding: 8px 18px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  cursor: pointer;
+  font-family: var(--font-family-heading);
+  transition: all 0.25s ease;
+}
+
+.btn-copy-master-action:hover {
+  background-color: var(--color-gold-400);
+  border-color: var(--color-gold-400);
+  color: var(--color-surface-900);
   transform: translateY(-1px);
+  box-shadow: var(--elevation-1);
 }
 
 .master-name-sub {
@@ -4125,18 +4150,62 @@ onUnmounted(() => {
 }
 
 /* ===================================================================
-   TAB 3: MY COPIES STYLES
+   TAB 3: MY COPIES STYLES (Fixed & Enhanced)
    =================================================================== */
+.section-title-bar {
+  margin-bottom: 24px;
+}
+
+.section-title {
+  font-size: 1.85rem;
+  color: var(--color-gold-500);
+  margin-bottom: 6px;
+  font-family: var(--font-family-heading);
+}
+
+.section-subtitle {
+  color: var(--color-grey-300);
+  font-size: 0.95rem;
+  max-width: 800px;
+}
+
+.my-copies-summary-bar {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 20px;
+  margin-bottom: 28px;
+}
+
+.summary-kpi-item {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  background-color: var(--color-surface-500);
+  border: 1px solid var(--color-gold-alpha-15);
+  border-radius: 12px;
+  padding: 20px;
+}
+
 .my-copies-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
-  gap: 20px;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 340px), 1fr));
+  gap: 24px;
 }
 
 .my-copy-card {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 18px;
+  background-color: var(--color-surface-500);
+  border: 1px solid var(--color-gold-alpha-15);
+  border-radius: 12px;
+  padding: 24px;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.my-copy-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--elevation-3);
 }
 
 .my-copy-header {
@@ -4146,11 +4215,20 @@ onUnmounted(() => {
 }
 
 .my-copy-avatar {
-  width: 44px;
-  height: 44px;
+  width: 48px;
+  height: 48px;
   border-radius: 50%;
   object-fit: cover;
   border: 2px solid var(--color-gold-500);
+  flex-shrink: 0;
+  background-color: var(--color-surface-400);
+}
+
+.my-copy-title-block {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
 }
 
 .my-copy-name {
@@ -4160,22 +4238,80 @@ onUnmounted(() => {
 }
 
 .my-copy-title {
-  font-size: 0.78rem;
+  font-size: 0.8rem;
   color: var(--color-grey-300);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.copy-status-badge {
+  margin-left: auto;
+  flex-shrink: 0;
 }
 
 .my-copy-stats-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 12px;
-  padding: 14px 0;
-  border-top: 1px solid var(--color-gold-alpha-08);
-  border-bottom: 1px solid var(--color-gold-alpha-08);
+  gap: 14px;
+  padding: 16px 0;
+  border-top: 1px solid var(--color-gold-alpha-15);
+  border-bottom: 1px solid var(--color-gold-alpha-15);
+}
+
+.my-copy-actions {
+  margin-top: 4px;
+}
+
+.btn-stop-copy {
+  background-color: var(--color-surface-400);
+  color: var(--color-error-400);
+  border: 1px solid var(--color-error-700);
+  border-radius: 8px;
+  padding: 11px 18px;
+  font-size: 0.88rem;
+  font-weight: 700;
+  cursor: pointer;
+  width: 100%;
+  font-family: var(--font-family-heading);
+  transition: all 0.25s ease;
+  text-align: center;
+}
+
+.btn-stop-copy:hover {
+  background-color: var(--color-error-900);
+  border-color: var(--color-error-500);
+  color: var(--color-error-200);
+  transform: translateY(-1px);
+  box-shadow: var(--elevation-1);
 }
 
 .empty-state-card {
-  padding: 60px 20px;
+  padding: 60px 24px;
   text-align: center;
+  background-color: var(--color-surface-500);
+  border: 1px solid var(--color-gold-alpha-15);
+  border-radius: 12px;
+}
+
+.empty-state-icon-circle {
+  margin: 0 auto 12px;
+  background-color: var(--color-surface-400);
+  color: var(--color-gold-500);
+}
+
+.empty-state-title {
+  font-size: 1.35rem;
+  color: var(--color-gold-500);
+  margin-bottom: 8px;
+}
+
+.empty-state-desc {
+  color: var(--color-grey-300);
+  font-size: 0.92rem;
+  line-height: 1.6;
+  max-width: 520px;
+  margin: 0 auto 20px;
 }
 
 /* ===================================================================

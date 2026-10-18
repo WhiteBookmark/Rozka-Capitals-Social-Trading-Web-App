@@ -42,17 +42,18 @@ export const useTradingStore = defineStore('trading', {
     },
 
     // --- LIVE TICKER STREAM (Real-time Copier Trade Stream) ---
+    // --- LIVE TICKER STREAM (Real-time Copier Trade Stream Matching Screenshot) ---
     liveTradeStream: [
-      { id: 't_1', maskedCopier: '22****9546', symbol: 'BTCUSD', profit: 2.23, time: 'Just now' },
-      { id: 't_2', maskedCopier: '23****4112', symbol: 'XAUUSD', profit: 18.40, time: '1m ago' },
-      { id: 't_3', maskedCopier: '22****9546', symbol: 'BTCUSD', profit: 0.01, time: '2m ago' },
-      { id: 't_4', maskedCopier: '21****8820', symbol: 'EURUSD', profit: 42.50, time: '3m ago' },
-      { id: 't_5', maskedCopier: '22****9546', symbol: 'BTCUSD', profit: 1.30, time: '4m ago' },
-      { id: 't_6', maskedCopier: '24****7703', symbol: 'USOIL', profit: 9.75, time: '5m ago' },
-      { id: 't_7', maskedCopier: '23****9459', symbol: 'GBPJPY', profit: 36.13, time: '6m ago' },
-      { id: 't_8', maskedCopier: '22****6121', symbol: 'ETHUSD', profit: 115.80, time: '7m ago' },
-      { id: 't_9', maskedCopier: '23****8868', symbol: 'NASDAQ', profit: 187.88, time: '8m ago' },
-      { id: 't_10', maskedCopier: '21****9042', symbol: 'XAUUSD', profit: 680.00, time: '9m ago' },
+      { id: 't_1', maskedCopier: '23****4205', symbol: 'BTCUSD', profit: -71.74, time: 'Just now', avatar: '/avatars/avatar-1.svg' },
+      { id: 't_2', maskedCopier: '23****8426', symbol: 'BTCUSD', profit: 10.83, time: '1m ago', avatar: '/avatars/avatar-2.svg' },
+      { id: 't_3', maskedCopier: '23****5392', symbol: 'BTCUSD', profit: 21.66, time: '2m ago', avatar: '/avatars/avatar-3.svg' },
+      { id: 't_4', maskedCopier: '23****6293', symbol: 'BTCUSD', profit: 32.49, time: '3m ago', avatar: '/avatars/avatar-4.svg' },
+      { id: 't_5', maskedCopier: '22****9546', symbol: 'BTCUSD', profit: 24.57, time: '4m ago', avatar: '/avatars/avatar-5.svg' },
+      { id: 't_6', maskedCopier: '24****7703', symbol: 'USOIL', profit: 9.75, time: '5m ago', avatar: '/avatars/avatar-6.svg' },
+      { id: 't_7', maskedCopier: '23****9459', symbol: 'GBPJPY', profit: 36.13, time: '6m ago', avatar: '/avatars/avatar-7.svg' },
+      { id: 't_8', maskedCopier: '22****6121', symbol: 'ETHUSD', profit: 115.80, time: '7m ago', avatar: '/avatars/avatar-8.svg' },
+      { id: 't_9', maskedCopier: '23****8868', symbol: 'NASDAQ', profit: 187.88, time: '8m ago', avatar: '/avatars/avatar-1.svg' },
+      { id: 't_10', maskedCopier: '21****9042', symbol: 'XAUUSD', profit: 680.00, time: '9m ago', avatar: '/avatars/avatar-2.svg' },
     ],
 
     // --- CONQUEST LUXURY CAR RAFFLE SHOWCASE ---
@@ -105,6 +106,7 @@ export const useTradingStore = defineStore('trading', {
         pnl: 1000.93,
         days: '7 Days',
         avatarType: 'female_blazer',
+        avatar: '/avatars/avatar-3.svg',
       },
       {
         rank: 1,
@@ -114,6 +116,7 @@ export const useTradingStore = defineStore('trading', {
         pnl: 3215.41,
         days: '7 Days',
         avatarType: 'male_glasses',
+        avatar: '/avatars/avatar-2.svg',
       },
       {
         rank: 3,
@@ -123,6 +126,7 @@ export const useTradingStore = defineStore('trading', {
         pnl: 851.79,
         days: '7 Days',
         avatarType: 'female_casual',
+        avatar: '/avatars/avatar-4.svg',
       },
     ],
 
@@ -138,6 +142,7 @@ export const useTradingStore = defineStore('trading', {
         pnl: 377.95,
         masterName: 'Oil & Majors',
         avatarType: 'female_blazer',
+        avatar: '/avatars/avatar-1.svg',
         equityTrend: [100, 108, 105, 120, 135, 130, 148],
       },
       {
@@ -150,6 +155,7 @@ export const useTradingStore = defineStore('trading', {
         pnl: 103.08,
         masterName: 'Gold Trend',
         avatarType: 'male_casual',
+        avatar: '/avatars/avatar-5.svg',
         equityTrend: [100, 96, 102, 98, 105, 104, 112],
       },
       {
@@ -162,6 +168,7 @@ export const useTradingStore = defineStore('trading', {
         pnl: 36.13,
         masterName: 'Yen Carry',
         avatarType: 'male_glasses',
+        avatar: '/avatars/avatar-6.svg',
         equityTrend: [100, 103, 101, 104, 106, 108, 110],
       },
       {
@@ -174,6 +181,7 @@ export const useTradingStore = defineStore('trading', {
         pnl: 187.88,
         masterName: 'Steady FX',
         avatarType: 'male_suit',
+        avatar: '/avatars/avatar-8.svg',
         equityTrend: [100, 94, 99, 103, 98, 106, 114],
       },
       {
@@ -186,6 +194,7 @@ export const useTradingStore = defineStore('trading', {
         pnl: 512.40,
         masterName: 'Elena Rostova',
         avatarType: 'female_casual',
+        avatar: '/avatars/avatar-7.svg',
         equityTrend: [100, 106, 112, 118, 122, 130, 138],
       },
       {
@@ -198,6 +207,7 @@ export const useTradingStore = defineStore('trading', {
         pnl: 245.10,
         masterName: 'Marcus Vance',
         avatarType: 'male_glasses',
+        avatar: '/avatars/avatar-2.svg',
         equityTrend: [100, 97, 105, 109, 115, 112, 121],
       },
       {
@@ -210,6 +220,7 @@ export const useTradingStore = defineStore('trading', {
         pnl: 680.00,
         masterName: 'Sophie Lin',
         avatarType: 'female_blazer',
+        avatar: '/avatars/avatar-3.svg',
         equityTrend: [100, 110, 115, 122, 128, 135, 144],
       },
       {
@@ -222,6 +233,7 @@ export const useTradingStore = defineStore('trading', {
         pnl: 89.50,
         masterName: 'David Sterling',
         avatarType: 'male_casual',
+        avatar: '/avatars/avatar-5.svg',
         equityTrend: [100, 95, 98, 101, 100, 104, 108],
       },
       {
@@ -234,6 +246,7 @@ export const useTradingStore = defineStore('trading', {
         pnl: 310.20,
         masterName: 'Alex Warren',
         avatarType: 'male_suit',
+        avatar: '/avatars/avatar-6.svg',
         equityTrend: [100, 104, 108, 106, 115, 120, 126],
       },
       {
@@ -246,6 +259,7 @@ export const useTradingStore = defineStore('trading', {
         pnl: 195.40,
         masterName: 'Crypto Swing',
         avatarType: 'female_casual',
+        avatar: '/avatars/avatar-4.svg',
         equityTrend: [100, 98, 104, 102, 110, 113, 118],
       },
       {
@@ -258,6 +272,7 @@ export const useTradingStore = defineStore('trading', {
         pnl: 220.80,
         masterName: 'Oil & Majors',
         avatarType: 'male_glasses',
+        avatar: '/avatars/avatar-1.svg',
         equityTrend: [100, 103, 107, 110, 109, 114, 120],
       },
       {
@@ -270,6 +285,7 @@ export const useTradingStore = defineStore('trading', {
         pnl: 142.60,
         masterName: 'Gold Trend',
         avatarType: 'female_blazer',
+        avatar: '/avatars/avatar-7.svg',
         equityTrend: [100, 98, 102, 105, 103, 108, 113],
       },
     ],
